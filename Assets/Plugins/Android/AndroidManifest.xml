@@ -3,7 +3,6 @@
     <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="32"/>
     <supports-screens android:anyDensity="true" android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:xlargeScreens="true"/>
     <uses-feature android:glEsVersion="0x30000"/>
-    
     <uses-feature android:name="android.hardware.vulkan.version" android:required="false"/>
     <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
     <uses-feature android:name="android.hardware.touchscreen.multitouch" android:required="false"/>

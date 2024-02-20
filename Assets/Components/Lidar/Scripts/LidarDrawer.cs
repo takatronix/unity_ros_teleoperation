@@ -5,6 +5,25 @@ using RosMessageTypes.Sensor;
 using RosMessageTypes.Std;
 using Unity.Robotics.ROSTCPConnector;
 
+#if UNITY_EDITOR
+using UnityEditor;
+
+[CustomEditor(typeof(LidarDrawer))]
+public class LidarDrawerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        LidarDrawer myScript = (LidarDrawer)target;
+        if(GUILayout.Button("Toggle Enabled"))
+        {
+            myScript.ToggleEnabled();
+        }
+    }
+}
+#endif
+
 public class LidarDrawer : MonoBehaviour
 {
     public Material lidar_material;
@@ -28,6 +47,10 @@ public class LidarDrawer : MonoBehaviour
     private int _displayPts;
     private Mesh mesh;
     private LidarSpawner _lidarSpawner;
+    private bool _enabled = false;
+    private GameObject _parent;
+
+    public GameObject p;
 
     void Start()
     {
@@ -52,13 +75,56 @@ public class LidarDrawer : MonoBehaviour
         renderParams.matProps.SetBuffer("_Positions", _meshVertices);
 
         _ros = ROSConnection.GetOrCreateInstance();
-        _ros.Subscribe<PointCloud2Msg>(topic, OnPointcloud);
+        // _ros.Subscribe<PointCloud2Msg>(topic, OnPointcloud);
 
 
         if((_lidarSpawner = GetComponent<LidarSpawner>()) != null)
         {
             _lidarSpawner.PointCloudGenerated += OnPointcloud;
         }
+    }
+
+    public bool CleanTF(string name)
+    {
+        GameObject target = GameObject.Find(name);
+
+        List<GameObject> children = new List<GameObject>();
+
+        // check if this is connected to root
+        while(target.transform.parent != null)
+        {
+            children.Add(target);
+            target = target.transform.parent.gameObject;
+            if(target.name == "odom")
+            {
+                children.Clear();
+                Debug.Log("Connected to root");
+                return true;
+            }
+        }
+
+        foreach(GameObject child in children)
+        {
+            Destroy(child);
+        }
+        return false;
+    }
+
+
+    void UpdatePose(string frame)
+    {
+        if(!CleanTF(frame))
+        {
+            return;
+        }
+        p = GameObject.Find(frame);
+        _parent = GameObject.Find(frame);
+        if(_parent == null) return;
+
+        transform.parent = _parent.transform;
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.Euler(-90, 90, 0);
+        transform.localScale = new Vector3(-1, 1, 1);
     }
 
     private void OnValidate() {
@@ -78,12 +144,20 @@ public class LidarDrawer : MonoBehaviour
     }
 
     private void Update() {
-        renderParams.matProps.SetMatrix("_ObjectToWorld", transform.localToWorldMatrix);
-        Graphics.RenderPrimitivesIndexed(renderParams, MeshTopology.Triangles, _meshTriangles, _meshTriangles.count, (int)mesh.GetIndexStart(0),_displayPts);
+        if(_enabled)
+        {
+            renderParams.matProps.SetMatrix("_ObjectToWorld", transform.localToWorldMatrix);
+            Graphics.RenderPrimitivesIndexed(renderParams, MeshTopology.Triangles, _meshTriangles, _meshTriangles.count, (int)mesh.GetIndexStart(0),_displayPts);
+        }
     }
 
     public void OnPointcloud(PointCloud2Msg pointCloud)
     {
+        if(_parent == null || _parent.name != pointCloud.header.frame_id)
+        {
+            UpdatePose(pointCloud.header.frame_id);
+        }
+
         if(pointCloud.data.Length == 0) return;
         if(pointCloud.data.Length / pointCloud.point_step > maxPts)
         {
@@ -148,6 +222,33 @@ public class LidarDrawer : MonoBehaviour
             }
         }
         return outData;
+    }
+
+    public void OnTopicChange(string topic)
+    {
+        _ros.Unsubscribe(this.topic);
+        this.topic = topic;
+        _ros.Subscribe<PointCloud2Msg>(topic, OnPointcloud);
+        Debug.Log("Subscribed to " + topic);
+    }
+
+    public void OnSizeChange(float size)
+    {
+        scale = size/10f;
+        renderParams.matProps.SetFloat("_PointSize", scale);
+    }
+
+    public void ToggleEnabled()
+    {
+        _enabled = !_enabled;
+        if(!_enabled)
+        {
+            _ros.Unsubscribe(topic);
+            _parent = null;
+        } else
+        {
+            _ros.Subscribe<PointCloud2Msg>(topic, OnPointcloud);
+        }
     }
 
     private static Mesh _MakePolygon(int sides)

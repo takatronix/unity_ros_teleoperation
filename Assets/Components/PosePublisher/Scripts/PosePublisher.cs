@@ -9,11 +9,36 @@ using UnityEngine.XR.Interaction.Toolkit;
 using RosMessageTypes.Behaviortree;
 
 
+#if UNITY_EDITOR
+using UnityEditor;
+
+[CustomEditor(typeof(PosePublisher))]
+public class PosePublisherEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        PosePublisher myScript = (PosePublisher)target;
+        if (GUILayout.Button("Cancel"))
+        {
+            myScript.Cancel();
+        }
+        if (GUILayout.Button("Publish"))
+        {
+            myScript.LastSelected(new SelectExitEventArgs());
+        }
+    }
+}
+#endif
+
 public class PosePublisher : MonoBehaviour
 {
     public string poseTopic;
     public string missionTopic;
-    public string CancelTopic;
+    public TMPro.TMP_InputField missionTopicInput;
+    public string cancelTopic;
+    public TMPro.TMP_InputField cancelTopicInput;
 
     public string frame_id = "odom";
     public GameObject arrow;
@@ -50,9 +75,24 @@ public class PosePublisher : MonoBehaviour
         missionRequest.target_pose_mission.target_threshold_position = 0.0;
         missionRequest.target_pose_mission.target_threshold_orientation = 0.0;
 
+
+        // try to get mission and cancel topic from player prefs
+        if (PlayerPrefs.HasKey("missionTopic"))
+        {
+            missionTopic = PlayerPrefs.GetString("missionTopic");
+        }
+        if (PlayerPrefs.HasKey("cancelTopic"))
+        {
+            cancelTopic = PlayerPrefs.GetString("cancelTopic");
+        }
+
+        missionTopicInput.text = missionTopic;
+        cancelTopicInput.text = cancelTopic;
+
+
         ros.RegisterPublisher<PoseStampedMsg>(poseTopic);
         ros.RegisterRosService<ActivateMissionRequest, ActivateMissionResponse>(missionTopic);
-        ros.RegisterRosService<TriggerRequest, TriggerResponse>(CancelTopic);
+        ros.RegisterRosService<TriggerRequest, TriggerResponse>(cancelTopic);
     }
 
     void Update()
@@ -116,7 +156,27 @@ public class PosePublisher : MonoBehaviour
 
     public void Cancel()
     {
-        ros.SendServiceMessage<TriggerResponse>(CancelTopic, new TriggerRequest(), (response) => Debug.Log(response.success));
+        ros.SendServiceMessage<TriggerResponse>(cancelTopic, new TriggerRequest(), (response) => Debug.Log(response.success));
     }
 
+
+    public void OnMissionTopic(string topic)
+    {
+        missionTopic = topic;
+        ros.RegisterRosService<ActivateMissionRequest, ActivateMissionResponse>(missionTopic);
+        Debug.Log("Mission topic set to: " + topic);
+
+        //write to player prefs
+        PlayerPrefs.SetString("missionTopic", topic);
+    }
+
+    public void OnCancelTopic(string topic)
+    {
+        cancelTopic = topic;
+        ros.RegisterRosService<TriggerRequest, TriggerResponse>(cancelTopic);
+        Debug.Log("Cancel topic set to: " + topic);
+
+        //write to player prefs
+        PlayerPrefs.SetString("cancelTopic", topic);
+    }
 }

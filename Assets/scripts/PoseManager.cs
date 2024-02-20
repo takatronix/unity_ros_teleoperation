@@ -99,6 +99,7 @@ public class PoseManager : MonoBehaviour
     void Scale(Vector2 input)
     {
         Vector3 scale = new Vector3(input.x, input.x, input.x);
+        scale = Vector3.Scale(_root.localScale, scale);
         _root.localScale += scale * speed * Time.deltaTime;
     }
 

@@ -17,9 +17,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Components/VoxBlox/VoxBloxTester.unity
     guid: a6c6d65b093ee394b8bf77454dd06aa0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Components/PosePublisher/PoseTester.unity
     guid: 1a78d5d9414241ed9b8a2ce1af602d6e
+  - enabled: 1
+    path: Assets/Scenes/VoxBloxTester.unity
+    guid: 706dd0aef7b23981dabaee1add7ef210
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: d692ced636ecadb9a99ecb6e0247e7b6, type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 9502fd768ba2eebf9a447f1eb9e39f11, type: 2}

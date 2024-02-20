@@ -36,6 +36,8 @@ public class VoxbloxMesh : MonoBehaviour
 
     public GameObject _parent;
 
+    private bool _enabled = true;
+
 
     void Start()
     {
@@ -144,6 +146,12 @@ public class VoxbloxMesh : MonoBehaviour
             mesh.RecalculateBounds();
         }
 
+    }
+
+    public void ToggleEnabled()
+    {
+        _enabled = !_enabled;
+        GetComponent<MeshRenderer>().enabled = _enabled;
     }
 
     public void Clear()
