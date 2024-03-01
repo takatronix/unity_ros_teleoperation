@@ -6,6 +6,7 @@ TagManager:
   tags:
   - robot
   - root
+  - hand
   layers:
   - Default
   - TransparentFX
