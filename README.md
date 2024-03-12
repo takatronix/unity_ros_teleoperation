@@ -129,11 +129,13 @@ This repo contains a series of components for Unity XR teleoperation with ROS in
 - [ ] splat quest shader
 - [ ] splat streaming
 - [ ] nerf scene poses fix (rotations are off)
+- [ ] Grab scaler?
 
 - [ ] Teleop demo
     - [ ] PS controllers mapped for twist commands
-    - [ ] Floating camera windows 
-    - [ ] Sensor spawner
+    - [x] Floating camera windows 
+    - [x] Sensor spawner
+    - [ ] Fix hand interaction
     - [ ] Settings
         - [ ] IP settings
         - [ ] Mode settings
