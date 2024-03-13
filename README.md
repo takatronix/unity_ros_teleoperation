@@ -79,15 +79,15 @@ This repo contains a series of components for Unity XR teleoperation with ROS in
 - [x] Local pose
     - local pose for render requests
 - [x] Save IP settings to user pref
-    - saves ip settings and added port/ip input text (keypay + keyboard)
+    - saves ip settings and added port/ip input text (keypad + keyboard)
 - [x] Add image view selector
     - can select which image topic to view
 - [x] better labels
     - relabeled UI
-- [x] Fix action server prempt on tf restart
+- [x] Fix action server preempt on tf restart
     - caught exception, only happens on --clock, modified package in unity for looping data
 - [x] Viewer zoom
-    - zoom via changable fov
+    - zoom via changeable fov
 - [x] Local rotations and viewer offset
     - works with physics derived motion such as grab interactable
 - [x] Test splat
@@ -130,12 +130,13 @@ This repo contains a series of components for Unity XR teleoperation with ROS in
 - [ ] splat streaming
 - [ ] nerf scene poses fix (rotations are off)
 - [ ] Grab scaler?
+- [ ] Add IP Presets
 
 - [ ] Teleop demo
     - [ ] PS controllers mapped for twist commands
     - [x] Floating camera windows 
     - [x] Sensor spawner
-    - [ ] Fix hand interaction
+    - [x] Fix hand interaction
     - [ ] Settings
         - [ ] IP settings
         - [ ] Mode settings

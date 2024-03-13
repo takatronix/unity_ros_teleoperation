@@ -39,15 +39,69 @@ public class ImageView : MonoBehaviour
     public RawImage _uiImage;
     public CameraManager manager;
     public TMPro.TextMeshProUGUI name;
+    public Sprite untracked;
+    public Sprite tracked;
 
     public string topicName;
 
     private Texture2D _texture2D;
 
     private int _lastSelected = 0;
-    private bool _tracking = false;
+
+    public bool _tracking = false;
+    private GameObject _frustrum;
+    private Image _icon;
     ROSConnection ros;
 
+
+    public bool CleanTF(string name)
+    {
+        GameObject target = GameObject.Find(name);
+
+        List<GameObject> children = new List<GameObject>();
+
+        // check if this is connected to root
+        int count = 0;
+        while(target.transform.parent != null)
+        {
+            count++;
+            children.Add(target);
+            target = target.transform.parent.gameObject;
+            if(target.name == "odom")
+            {
+                children.Clear();
+                Debug.Log("Connected to root");
+                return true;
+            }
+            if(count > 100)
+            {
+                Debug.LogError("Looping too much");
+                return false;
+            }
+        }
+
+        foreach(GameObject child in children)
+        {
+            Destroy(child);
+        }
+        return false;
+    }
+
+
+    void UpdatePose(string frame)
+    {
+        if(!CleanTF(frame))
+        {
+            return;
+        }
+        GameObject _parent = GameObject.Find(frame);
+        if(_parent == null) return;
+
+        transform.parent = _parent.transform;
+        transform.localPosition = new Vector3(0.1f, 0.2f, 0);
+        transform.localRotation = Quaternion.Euler(-90, 90, 180);
+        // transform.localScale = new Vector3(-1, 1, 1);
+    }
 
     void Start()
     {
@@ -60,6 +114,9 @@ public class ImageView : MonoBehaviour
 
         ros.GetTopicAndTypeList(UpdateTopics);
         name.text = "None";
+
+        _icon = topMenu.transform.Find("Track/Image/Image").GetComponent<Image>();
+        _frustrum = transform.Find("Frustrum").gameObject;
     }
 
     private void OnDestroy() {
@@ -93,6 +150,10 @@ public class ImageView : MonoBehaviour
     public void ToggleTrack()
     {
         _tracking = !_tracking;
+
+        _icon.sprite = _tracking ? tracked : untracked;
+        dropdown.gameObject.SetActive(false);
+        topMenu.SetActive(false);
     }
 
     public void OnClick()
@@ -152,18 +213,35 @@ public class ImageView : MonoBehaviour
     {
         if (_texture2D == null) return;
 
-        float aspectRatio = (float)_texture2D.height / (float)_texture2D.width;
-        float height = _uiImage.rectTransform.rect.height;
-        float width = height * aspectRatio/2;
+        float aspectRatio = (float)_texture2D.width/(float)_texture2D.height;
+        float height = _uiImage.rectTransform.sizeDelta.y;
+        float width = height * aspectRatio;
         
         _uiImage.rectTransform.sizeDelta = new Vector2(width,_uiImage.rectTransform.sizeDelta.y);
     }
 
     void ParseHeader(HeaderMsg header)
     {
+
         if (_tracking)
         {
-            Debug.Log("Tracking");
+            // If we are tracking to the TF, update the parent
+            if(header.frame_id != null && (transform.parent == null || header.frame_id != transform.parent.name))
+            {
+                _frustrum.SetActive(true);
+                // If the parent is not the same as the frame_id, update the parent
+                UpdatePose(header.frame_id);
+            }
+
+        } else if (transform.parent != null && transform.parent.name != "odom")
+        {
+            _frustrum.SetActive(false);
+            // Otherwise, set the parent to the odom frame but keep the current position
+            Vector3 pos = transform.position;
+            Quaternion rot = transform.rotation;
+            UpdatePose("odom");
+            transform.position = pos;
+            transform.rotation = rot;
         }
     }
 
