@@ -71,6 +71,10 @@ public class ROSManager : MonoBehaviour
 
     public void OnIPDone(string ip)
     {
+        _ip = ip;
+        _ros.RosIPAddress = _ip;
+        PlayerPrefs.SetString("ip", _ip);
+        PlayerPrefs.Save();
 
     }
 
