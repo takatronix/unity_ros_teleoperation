@@ -95,12 +95,16 @@ public class NvbloxMesh : MonoBehaviour
         string blocksStr = "";
 
         Mesh mesh;
+        int numVertices = 0, count = 0;
 
         for(int j=0; j<meshBlocks.Length; j++)
         {
             MeshBlockMsg block = meshBlocks[j];
+            if(block.vertices.Length == 0) continue;
+
             Color color;
-            
+            numVertices += block.vertices.Length;
+            count++;
             Vector3[] vertices = new Vector3[block.vertices.Length];
             Vector3[] normals = new Vector3[block.normals.Length];
             Color[] colors = new Color[block.colors.Length];
@@ -180,6 +184,8 @@ public class NvbloxMesh : MonoBehaviour
             mesh.colors = colors;
             mesh.RecalculateBounds();
         }
+
+        Debug.LogWarning("Average vertices: " + (float)numVertices / count);
 
     }
 

@@ -16,6 +16,10 @@ public class SettingsManager : MonoBehaviour
     private JoystickManager _joystickManager;
     void Start()
     {
+        if (poseManager == null)
+        {
+            poseManager = FindObjectOfType<PoseManager>();
+        }
         poseManager.SetLocked(_lockedPose);
         axisIcon.sprite = _lockedPose ? lockedIcon : unlockedIcon;
 
@@ -47,7 +51,7 @@ public class SettingsManager : MonoBehaviour
 
     public void ToggleNvblox()
     {
-        nvbloxMesh.ToggleEnabled();
+        nvbloxMesh?.ToggleEnabled();
     }
 
     public void Recenter()

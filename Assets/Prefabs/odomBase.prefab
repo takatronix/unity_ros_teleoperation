@@ -64,6 +64,7 @@ MonoBehaviour:
   joystickZR: {fileID: -98630673214662021, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   alt: {fileID: -9069943865240206001, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   action: {fileID: 2685676896762586523, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  bAction: {fileID: 2735638691585490114, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   actions:
     m_PersistentCalls:
       m_Calls:
@@ -79,8 +80,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  bActions:
+    m_PersistentCalls:
+      m_Calls: []
   sphere: {fileID: 2561291079615939497}
+  floor: {fileID: 0}
   speed: 1
+  rotationTolerance: 5
   handSelectable: 0
   root: {fileID: 0}
   _root: {fileID: 1197795077337918393}

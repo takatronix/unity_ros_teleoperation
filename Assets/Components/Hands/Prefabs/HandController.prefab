@@ -146,7 +146,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6765741247600456635}
   - component: {fileID: 7316941705982056230}
-  - component: {fileID: 269995710466944844}
   m_Layer: 0
   m_Name: HandController
   m_TagString: Untagged
@@ -182,28 +181,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0d973c72f791e16b48322cc5abfc89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activeController: {fileID: 0}
+  twistController: {fileID: 0}
+  poseController: {fileID: 0}
   jointsText: {fileID: 9177127932923170859}
   modeText: {fileID: 4690262791299189073}
   msgText: {fileID: 6547231185769013949}
---- !u!114 &269995710466944844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 676282507790994700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 975716428dc30664ebc21bb5217b7ac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  summonAction: {fileID: -1147960669695011781, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  handActiveAction: {fileID: -3897390958777905195, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  palmRotationAction: {fileID: 9014799273302503812, guid: 2e52aefc8c982aa458ead95f51a6749e, type: 3}
-  palmPositionAction: {fileID: -5558332398660993837, guid: 2e52aefc8c982aa458ead95f51a6749e, type: 3}
-  active: 0
-  speed: 0.75
-  offset: {x: 0, y: 0.5, z: 0}
+  poseManager: {fileID: 0}
+  worldFrame: quest_origin
 --- !u!1 &1528378452521016143
 GameObject:
   m_ObjectHideFlags: 0
@@ -1489,7 +1474,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dropdown: {fileID: 1237492452965231012}
+  topMenu: {fileID: 0}
+  _uiImage: {fileID: 0}
+  manager: {fileID: 0}
+  name: {fileID: 0}
+  untracked: {fileID: 0}
+  tracked: {fileID: 0}
   topicName: 
+  _tracking: 0
 --- !u!114 &1902873531176850170
 MonoBehaviour:
   m_ObjectHideFlags: 0

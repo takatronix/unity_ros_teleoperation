@@ -132,8 +132,8 @@ public class HandPub : MonoBehaviour
         HandGestureMsg msg = new HandGestureMsg();
         msg.name = "Thumb_Up";
         ros.Publish(_gestureTopic, msg);
-        if(msgText != null)
-            msgText.SetText("Twist activated");
+        
+        msgText?.SetText("Twist activated");
     }
 
     public void PubPoseController()
@@ -141,15 +141,13 @@ public class HandPub : MonoBehaviour
         HandGestureMsg msg = new HandGestureMsg();
         msg.name = "Thump_Down";
         ros.Publish(_gestureTopic, msg);
-        if(msgText != null)
-            msgText.SetText("Pose activated");
+        msgText?.SetText("Pose activated");
     }
 
     public void ToggleConfidence()
     {
         _highConfidence = !_highConfidence;
-        if(msgText != null)
-            msgText.SetText(_highConfidence ? "High Confidence" : "Low Confidence");
+        msgText?.SetText(_highConfidence ? "High Confidence" : "Low Confidence");
     }
 
     void OnHandUpdate(XRHandSubsystem subsystem, 
@@ -231,7 +229,8 @@ public class HandPub : MonoBehaviour
             ros.Publish(_landmarksTopic, msg);
             ros.Publish(_pointCloudTopic, pointCloudMsg);
         } else {
-            modeText.SetText("No Hands!");
+            if(modeText != null)
+                modeText.SetText("No Hands!");
         }
     }
 

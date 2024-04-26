@@ -133,14 +133,18 @@ This repo contains a series of components for Unity XR teleoperation with ROS in
 - [ ] Add IP Presets
 
 - [ ] Teleop demo
-    - [ ] PS controllers mapped for twist commands
+    - [x] PS controllers mapped for twist commands
     - [x] Floating camera windows 
     - [x] Sensor spawner
     - [x] Fix hand interaction
     - [ ] Settings
-        - [ ] IP settings
-        - [ ] Mode settings
+        - [x] IP settings
+        - [x] Mode settings
         - [ ] Inverted controls
     - [ ] Smaller model
     - [ ] Table spawner
     - [ ] Spherical orbit
+    - [x] fix jumps on lock
+    - [ ] Recenter on reconnect
+    - [x] Enable move unlock at start + point and click
+    - [ ] speed settings
