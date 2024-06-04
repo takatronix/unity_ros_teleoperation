@@ -6,11 +6,14 @@ using RosMessageTypes.BuiltinInterfaces;
 using RosMessageTypes.Std;
 using Unity.Robotics.ROSTCPConnector;
 using Unity.Robotics.ROSTCPConnector.MessageGeneration;
+using UnityEngine.Rendering;
 
 public class Streamer : MonoBehaviour
 {
     public string topic = "/quest/image";
     public bool enabled = true;
+    public GameObject cameraPrefab;
+
 
     private RenderTexture _renderTexture;
     private Texture2D _texture2D;
@@ -35,9 +38,8 @@ public class Streamer : MonoBehaviour
     {
         _ros = ROSConnection.GetOrCreateInstance();
 
-        GameObject cameraObject = new GameObject("ROSCamera");
-        _camera = cameraObject.AddComponent<Camera>();
 
+        _camera = Instantiate(cameraPrefab).GetComponent<Camera>();
         _camera.transform.SetParent(Camera.main.transform);
 
         _renderTexture = new RenderTexture(1280, 720, 24);
@@ -52,16 +54,22 @@ public class Streamer : MonoBehaviour
 
         _header = new HeaderMsg(0, new TimeMsg(0, 0), "VR");
 
-
+        // _camera = Camera.main;
         _camera.targetTexture = _renderTexture;
 
         _ros.RegisterPublisher<ImageMsg>(topic);
+
+        // RenderPipelineManager.endContextRendering += OnEndContextRendering;
     }
 
-    void Update()
+    // void OnEndContextRendering(ScriptableRenderContext context, List<Camera> cameras)
+    public void Update()
     {
         if (!enabled)
             return;
+
+        // blit the camera to the RenderTexture
+        // Graphics.Blit(_camera.activeTexture, _renderTexture);
 
         // copy the RenderTexture to the Texture2D
         RenderTexture.active = _renderTexture;
@@ -76,6 +84,7 @@ public class Streamer : MonoBehaviour
 
     private void OnDestroy()
     {
+        // RenderPipelineManager.endContextRendering -= OnEndContextRendering;
         if (_instance == this)
         {
             _instance = null;

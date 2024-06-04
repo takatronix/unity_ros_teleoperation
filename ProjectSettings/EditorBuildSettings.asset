@@ -23,7 +23,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/VoxBloxTester.unity
     guid: 706dd0aef7b23981dabaee1add7ef210
-  - enabled: 1
+  - enabled: 0
     path: Assets/Components/Haptics/HapticsTest.unity
     guid: f26fe3d8a5fed67678b7455f5ffc0fd4
   - enabled: 0
@@ -41,6 +41,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Components/HeadsetPublisher/HeadsetPublisherTester.unity
     guid: a72a28840159b0e9fb6e2eb8c281b8d8
+  - enabled: 1
+    path: Assets/Components/VRStreamer/VRStreamerTester.unity
+    guid: 9fd76377db89753458ba399dd20b39f3
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: d692ced636ecadb9a99ecb6e0247e7b6, type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 9502fd768ba2eebf9a447f1eb9e39f11, type: 2}

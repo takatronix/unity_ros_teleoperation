@@ -10,6 +10,13 @@ public class SettingsManager : MonoBehaviour
     public Image axisIcon;
     public Sprite unlockedIcon;
     public Sprite lockedIcon;
+    
+    public Sprite streamOnIcon;
+    public Sprite streamOffIcon;
+    public Image streamIcon;
+
+    public bool startStreaming = false;
+
     private bool _lockedPose = true;
 
     private PosePublisher _posePublisher;
@@ -35,7 +42,16 @@ public class SettingsManager : MonoBehaviour
         {
             Debug.LogWarning("No Streamer found in scene");
         } else {
-            _streamer.enabled = false;
+            if (startStreaming)
+            {
+                _streamer.enabled = true;
+                streamIcon.sprite = streamOnIcon;
+            }
+            else
+            {
+                _streamer.enabled = false;
+                streamIcon.sprite = streamOffIcon;
+            }
             Debug.Log($"Streaming to topic {_streamer.topic}");
         }
     }
@@ -44,7 +60,7 @@ public class SettingsManager : MonoBehaviour
     {
         if(_streamer != null){
             _streamer.enabled = !_streamer.enabled;
-            Debug.Log("Streamer enabled: " + _streamer.enabled);
+            streamIcon.sprite = _streamer.enabled ? streamOnIcon : streamOffIcon;
         }
     }
 
