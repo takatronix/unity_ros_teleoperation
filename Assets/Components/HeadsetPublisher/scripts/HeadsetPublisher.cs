@@ -14,6 +14,7 @@ public class HeadsetPublisher : MonoBehaviour
     public string unityFrame = "vr_origin";
     public string headsetFrame = "headset";
     public string handFrameLeft = "hand_left";
+    public string poseTopic = "/quest/pose";
 
     public InputActionReference headsetPose;
     public InputActionReference headsetRotation;
@@ -27,7 +28,7 @@ public class HeadsetPublisher : MonoBehaviour
     private ROSConnection ros;
     private TFMessageMsg tfMsg;
     private PoseStampedMsg poseMsg;
-    private HeaderMsg headHeader;
+    private HeaderMsg headsetHeader;
     private string rootFrame;
 
     void Awake()
@@ -39,15 +40,13 @@ public class HeadsetPublisher : MonoBehaviour
         root = GameObject.FindWithTag("root").transform;
         rootFrame = root.GetComponent<TFAttachment>().FrameID;
 
-        ros.RegisterPublisher<PoseStampedMsg>(unityFrame + "/" + headsetFrame);
-        ros.RegisterPublisher<PoseStampedMsg>(unityFrame + "/" + handFrameLeft);
-        ros.RegisterPublisher<PoseStampedMsg>(unityFrame + "/" + handFrameRight);
+        ros.RegisterPublisher<PoseStampedMsg>(poseTopic);
 
         ros.RegisterPublisher<TFMessageMsg>("/tf");
 
         poseMsg = new PoseStampedMsg();
-        headHeader = new HeaderMsg();
-        headHeader.frame_id = rootFrame;
+        headsetHeader = new HeaderMsg();
+        headsetHeader.frame_id = unityFrame;
 
         tfMsg = new TFMessageMsg(); 
 
@@ -61,7 +60,7 @@ public class HeadsetPublisher : MonoBehaviour
 
     void Update()
     {
-        tfMsg.transforms = new TransformStampedMsg[2];
+        tfMsg.transforms = new TransformStampedMsg[4];
         tfMsg.transforms[0] = new TransformStampedMsg();
         HeaderMsg rootHeader = new HeaderMsg();
         rootHeader.frame_id = rootFrame;
@@ -71,20 +70,11 @@ public class HeadsetPublisher : MonoBehaviour
         tfMsg.transforms[0].transform.translation = new Vector3Msg();
         tfMsg.transforms[0].transform.rotation = new QuaternionMsg();
 
-        // Vector3 rootPosition = 
         tfMsg.transforms[0].transform.translation = root.InverseTransformPoint(Vector3.zero).To<FLU>();
-        // tfMsg.transforms[0].transform.translation.y = rootPosition.y;
-        // tfMsg.transforms[0].transform.translation.z = rootPosition.z;
 
-        // Quaternion rootRotation = ;
         tfMsg.transforms[0].transform.rotation = Quaternion.Inverse(root.rotation).To<FLU>();
-        // tfMsg.transforms[0].transform.rotation.y = rootRotation.y;
-        // tfMsg.transforms[0].transform.rotation.z = rootRotation.z;
-        // tfMsg.transforms[0].transform.rotation.w = rootRotation.w;
 
         tfMsg.transforms[1] = new TransformStampedMsg();
-        HeaderMsg headsetHeader = new HeaderMsg();
-        headsetHeader.frame_id = unityFrame;
         tfMsg.transforms[1].header = headsetHeader;
         tfMsg.transforms[1].child_frame_id = headsetFrame;
         tfMsg.transforms[1].transform = new TransformMsg();
@@ -92,23 +82,50 @@ public class HeadsetPublisher : MonoBehaviour
         tfMsg.transforms[1].transform.rotation = new QuaternionMsg();
         tfMsg.transforms[1].transform.rotation.w = 1;
 
+        tfMsg.transforms[2] = new TransformStampedMsg();
+        tfMsg.transforms[2].header = headsetHeader;
+        tfMsg.transforms[2].child_frame_id = handFrameLeft;
+        tfMsg.transforms[2].transform = new TransformMsg();
+
+        tfMsg.transforms[3] = new TransformStampedMsg();
+        tfMsg.transforms[3].header = headsetHeader;
+        tfMsg.transforms[3].child_frame_id = handFrameRight;
+        tfMsg.transforms[3].transform = new TransformMsg();
 
 
+        poseMsg.header = headsetHeader;
 
-
-
-        poseMsg.header = headHeader;
         PointMsg point = headsetPose.action.ReadValue<Vector3>().To<FLU>();
-
-        tfMsg.transforms[1].transform.translation = headsetPose.action.ReadValue<Vector3>().To<FLU>();
-        
         QuaternionMsg quaternion = headsetRotation.action.ReadValue<Quaternion>().To<FLU>();
 
-        tfMsg.transforms[1].transform.rotation = headsetRotation.action.ReadValue<Quaternion>().To<FLU>();
+        if(quaternion.From<FLU>().Equals(default))
+            quaternion.w = 1;
+
+
+        tfMsg.transforms[1].transform.translation = headsetPose.action.ReadValue<Vector3>().To<FLU>();
+        tfMsg.transforms[1].transform.rotation = quaternion;
+
+
+
+        tfMsg.transforms[2].transform.translation = handPoseLeft.action.ReadValue<Vector3>().To<FLU>();
+        tfMsg.transforms[2].transform.rotation = handRotationLeft.action.ReadValue<Quaternion>().To<FLU>();
+
+
+
+        tfMsg.transforms[3].transform.translation = handPoseRight.action.ReadValue<Vector3>().To<FLU>();
+        tfMsg.transforms[3].transform.rotation = handRotationRight.action.ReadValue<Quaternion>().To<FLU>();
+
+        // Unity defaults to a quaternion with all 0s if the headset/hands arent detected, if this happens we set the identity quaternion
+        for(int i = 0; i < tfMsg.transforms.Length; i++)
+            if (tfMsg.transforms[i].transform.rotation.From<FLU>().Equals(default))
+                tfMsg.transforms[i].transform.rotation.w = 1;
+
+
+
 
         poseMsg.pose.position = point;
         poseMsg.pose.orientation = quaternion;
-        ros.Publish(unityFrame + "/" + headsetFrame, poseMsg);
+        ros.Publish(poseTopic, poseMsg);
 
         ros.Publish("/tf", tfMsg);
     }
