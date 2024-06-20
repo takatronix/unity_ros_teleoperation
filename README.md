@@ -6,14 +6,24 @@ This repo contains a series of components for Unity XR teleoperation with ROS in
 
 | Component | Description | Location | Status |
 | --- | --- | --- | --- |
-| NeRFViewer | Handheld viewer for rendering NeRFs and scene interaction | [Assets/Components/Viewer](Assets/Components/Viewer) | Functional |
-| Hands | Hand tracking and pose publishing over ROS, compatible with Ability hand models | [Assets/Components/Hands](Assets/Components/Hands) | Functional |
-| Lidar | GPU rendering for LiDAR and PointCloud2 point viz from ROS | [Assets/Components/Lidar](Assets/Components/Lidar) | Needs clean up |
-| PosePublisher | Publishes a pose from select and drag interaction and publishes as a ActiveMission for Alma locomotion | [Assets/Components/PosePublisher](Assets/Components/PosePublisher) | Functional (stop needs work) |
-| Voxblox | Voxel mesh rendering | [Assets/Components/Voxblox](Assets/Components/Voxblox) | Complete |
-| Splat | 3D viewer for Gaussian Splats | [Assets/Components/Splat](Assets/Components/Splat) | Incomplete |
-| Image Renderer | Duplicates pose from a transfrom.json to render an image | [Assets/Components/ImageRenderer](Assets/Components/ImageRenderer) | Needs testing |
 | Alma | Full Alma model compatible with Unity and linked to TF syste | [Assets/Components/Alma](Assets/Components/Alma) | Needs mesh clean up |
+| Camera Viewer | Renders a ROS image stream to a floating image window | [Assets/Components/CameraView](Assets/Components/CameraView) | Functional |
+| Hands | Hand tracking and pose publishing over ROS, compatible with Ability hand models | [Assets/Components/Hands](Assets/Components/Hands) | Functional |
+| Haptic | Bhaptic glove support | [Assets/Components/Haptics](Assets/Components/Haptics) | Functional |
+| Headset Publisher | Publishes headset and hand poses on TF and Pose | [Assets/Components/HeadsetPublisher](Assets/Components/HeadsetPublisher) | Functional |
+| Image Renderer | Duplicates pose from a transfrom.json to render an image | [Assets/Components/ImageRenderer](Assets/Components/ImageRenderer) | DEPRECATED |
+| Lidar | GPU rendering for LiDAR and PointCloud2 point viz from ROS | [Assets/Components/Lidar](Assets/Components/Lidar) | Functional |
+| Menu | Palm menu for interaction and toggling | [Assets/Components/Menu](Assets/Components/Menu) | Functional |
+| NeRFViewer | Handheld viewer for rendering NeRFs and scene interaction | [Assets/Components/NeRFViewer](Assets/Components/NeRFViewer) | Functional (needs updates) |
+| PosePublisher | Publishes a pose from select and drag interaction and publishes as a ActiveMission for Alma locomotion | [Assets/Components/PosePublisher](Assets/Components/PosePublisher) | Functional |
+| Robots | WiP will contain ALMA, dynaarm, panda and other robot models | [Assets/Components/Robots](Assets/Components/Robots) | Incomplete |
+| Splat | 3D viewer for Gaussian Splats | [Assets/Components/Splat](Assets/Components/Splat) | Incomplete |
+| Stereo | Stereo camera rendering, renders to each eye for human depth perception | [Assets/Components/StereoImage](Assets/Components/StereoImage) | Functional |
+| TF | WiP new TF system for managing robots and reorientation | [Assets/Components/TFSystem](Assets/Components/TFSystem) | Incomplete |
+| Voxblox | Voxel mesh rendering | [Assets/Components/VoxBlox](Assets/Components/VoxBlox) | Functional |
+| VR Debug | Debugging tools for VR, namely a console | [Assets/Components/VRDebug](Assets/Components/VRDebug) | Functional |
+| VR Streamer | Streams a the VR view to a ROS topic (w/o AR view) | [Assets/Components/VRStreamer](Assets/Components/VRStreamer) | Functional |
+
 
 
 ## Scenes
@@ -135,10 +145,12 @@ In general the scenes should have a few objects by default:
 - [x] Compute shader debayering
     - Added compute shader for debayering for raw images
 - [x] Add haptic feedback from psyonic hand
-    - Testing needed..
-- [ ] Docs
+    - Works
+- [x] Palm menu v2
+    - Added new menu with more options and better linking
 
-- [ ] Palm menu v2
+
+- [ ] Docs
 - [ ] Center around map frame (inverse tf)
 - [ ] New TF manager (singleton)
 - [ ] Switch to UDP
