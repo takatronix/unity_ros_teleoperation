@@ -5,7 +5,6 @@ using Unity.Robotics.ROSTCPConnector;
 using RosMessageTypes.Geometry;
 using UnityEngine.InputSystem;
 using RosMessageTypes.Sensor;
-using RosMessageTypes.JoyManager;
 
 public class JoystickManager : MonoBehaviour
 {
@@ -25,7 +24,7 @@ public class JoystickManager : MonoBehaviour
 
     private ROSConnection _ros;
 
-    private AnyJoyMsg _joyMsg;
+    private JoyMsg _joyMsg;
     private bool _enabled = false;
     private int leftHandState = 0; // 0 = not tracked, 1 = tracked, 2 = hand tracked
     private int rightHandState = 0; // 0 = not tracked, 1 = tracked, 2 = hand tracked
@@ -36,11 +35,10 @@ public class JoystickManager : MonoBehaviour
     {
         _ros = ROSConnection.GetOrCreateInstance();
 
-        _joyMsg = new AnyJoyMsg();
+        _joyMsg = new JoyMsg();
         _joyMsg.header.frame_id = "vr_origin";
-        _joyMsg.joy = new JoyMsg();
 
-        _ros.RegisterPublisher<AnyJoyMsg>(joyTopic);
+        _ros.RegisterPublisher<JoyMsg>(joyTopic);
     }
 
     public void SetEnabled(bool enabled)
@@ -55,8 +53,8 @@ public class JoystickManager : MonoBehaviour
             Vector2 xy = joystickXY.action.ReadValue<Vector2>();
             Vector2 zr = joystickZR.action.ReadValue<Vector2>();     
 
-            _joyMsg.joy.axes = new float[] {xy.x, xy.y, zr.x, zr.y, controllerTriggerL.action.ReadValue<float>(), controllerTriggerR.action.ReadValue<float>(), controllerGripL.action.ReadValue<float>(), controllerGripR.action.ReadValue<float>()};
-            _joyMsg.joy.buttons = new int[] {
+            _joyMsg.axes = new float[] {xy.x, xy.y, zr.x, zr.y, controllerTriggerL.action.ReadValue<float>(), controllerTriggerR.action.ReadValue<float>(), controllerGripL.action.ReadValue<float>(), controllerGripR.action.ReadValue<float>()};
+            _joyMsg.buttons = new int[] {
                 controllerX.action.ReadValue<float>() > 0.5f ? 1 : 0,
                 controllerA.action.ReadValue<float>() > 0.5f ? 1 : 0,
                 controllerB.action.ReadValue<float>() > 0.5f ? 1 : 0,
