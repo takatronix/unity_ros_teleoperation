@@ -93,7 +93,9 @@ public class ROSManager : MonoBehaviour
         _ipText.text = _ip;
         _portText.text = _port.ToString();
 
-        OnConnectionColor.Invoke(!_ros.HasConnectionError);
+        _connected = !_ros.HasConnectionError;
+
+        OnConnectionColor.Invoke(_connected);
 
     }
 

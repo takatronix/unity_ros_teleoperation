@@ -24,19 +24,23 @@ public class LidarDrawerEditor : Editor
     }
 }
 #endif
+public enum VizType
+{
+    Lidar = 4 * 4,
+    RGBD = 4 * 6,
+    RGBDMesh = 4 * 6 + 1,
+    Splat = 4 * 14
+
+}
 
 public class LidarDrawer : MonoBehaviour
 {
 
-    public enum VizType
-    {
-        Lidar,
-        RGBD,
-        RGBDMesh
-    }
+
     public Material lidar_material;
     public Material rgbd_material;
     public Material rgbd_mesh_material;
+    public Material splat_material;
 
 
 
@@ -52,7 +56,7 @@ public class LidarDrawer : MonoBehaviour
     public string topic = "/lidar/point_cloud";
     public VizType vizType = VizType.Lidar;
 
-    private int _LidarDataSize = 4*4;
+    private int _LidarDataSize = 4 * 4;
     private ROSConnection _ros;
     private Mesh mesh;
     private LidarSpawner _lidarSpawner;
@@ -70,8 +74,11 @@ public class LidarDrawer : MonoBehaviour
     {
         _ros = ROSConnection.GetOrCreateInstance();
 
-        rgbd = vizType == VizType.RGBD || vizType == VizType.RGBDMesh;
-        _LidarDataSize = 4 * (4 + (rgbd ? 2 : 0));
+        _LidarDataSize = (int)vizType;
+        if (_LidarDataSize % 2 == 1) // In case we are rgbdmesh
+        {
+            _LidarDataSize -= 1;
+        }
         mesh = LidarUtils.MakePolygon(sides);
 
         _meshTriangles = new GraphicsBuffer(GraphicsBuffer.Target.Structured, mesh.triangles.Length, 4);
@@ -80,7 +87,7 @@ public class LidarDrawer : MonoBehaviour
         _meshVertices.SetData(mesh.vertices);
         _ptData = new GraphicsBuffer(GraphicsBuffer.Target.Structured, maxPts, _LidarDataSize);
 
-        switch(vizType)
+        switch (vizType)
         {
             case VizType.Lidar:
                 renderParams = new RenderParams(lidar_material);
@@ -90,6 +97,9 @@ public class LidarDrawer : MonoBehaviour
                 break;
             case VizType.RGBDMesh:
                 renderParams = new RenderParams(rgbd_mesh_material);
+                break;
+            case VizType.Splat:
+                renderParams = new RenderParams(splat_material);
                 break;
         }
 
@@ -103,7 +113,7 @@ public class LidarDrawer : MonoBehaviour
         renderParams.matProps.SetBuffer("_Positions", _meshVertices);
 
 
-        if((_lidarSpawner = GetComponent<LidarSpawner>()) != null)
+        if ((_lidarSpawner = GetComponent<LidarSpawner>()) != null)
         {
             _lidarSpawner.PointCloudGenerated += OnPointcloud;
         }
@@ -113,7 +123,7 @@ public class LidarDrawer : MonoBehaviour
     {
         GameObject target = GameObject.Find(name);
 
-        if(target == null)
+        if (target == null)
         {
             return false;
         }
@@ -125,25 +135,25 @@ public class LidarDrawer : MonoBehaviour
 
         // check if this is connected to root
         int count = 0;
-        while(target.transform.parent != null)
+        while (target.transform.parent != null)
         {
             count++;
             children.Add(target);
             target = target.transform.parent.gameObject;
-            if(target.name == "odom")
+            if (target.name == "odom")
             {
                 children.Clear();
                 Debug.Log("Connected to root");
                 return true;
             }
-            if(count > 1000)
+            if (count > 1000)
             {
                 Debug.LogWarning("Too many iterations");
                 return false;
             }
         }
 
-        foreach(GameObject child in children)
+        foreach (GameObject child in children)
         {
             Destroy(child);
         }
@@ -160,7 +170,8 @@ public class LidarDrawer : MonoBehaviour
         p = GameObject.Find(frame);
         _parent = GameObject.Find(frame);
         Debug.Log("Parent: " + _parent + " " + frame + " " + p);
-        if(_parent == null) {
+        if (_parent == null)
+        {
             // The parent object doesn't exist yet, so we place this object at the origin
             _parent = GameObject.FindWithTag("root");
             _missingParent = true;
@@ -172,18 +183,20 @@ public class LidarDrawer : MonoBehaviour
         transform.localScale = new Vector3(-1, 1, 1);
     }
 
-    private void OnValidate() {
-        if(renderParams.matProps != null)
+    private void OnValidate()
+    {
+        if (renderParams.matProps != null)
         {
             renderParams.matProps.SetFloat("_PointSize", scale);
         }
-        if(displayPts > maxPts)
+        if (displayPts > maxPts)
         {
             displayPts = maxPts;
         }
     }
 
-    private void OnDestroy() {
+    private void OnDestroy()
+    {
         _meshTriangles?.Dispose();
         _meshTriangles = null;
         _meshVertices?.Dispose();
@@ -192,8 +205,9 @@ public class LidarDrawer : MonoBehaviour
         _ptData = null;
     }
 
-    private void Update() {
-        if(_enabled)
+    private void Update()
+    {
+        if (_enabled)
         {
             renderParams.matProps.SetMatrix("_ObjectToWorld", transform.localToWorldMatrix);
             Graphics.RenderPrimitivesIndexed(renderParams, MeshTopology.Triangles, _meshTriangles, _meshTriangles.count, (int)mesh.GetIndexStart(0), _numPts);
@@ -202,23 +216,23 @@ public class LidarDrawer : MonoBehaviour
 
     public void OnPointcloud(PointCloud2Msg pointCloud)
     {
-        if(_parent == null || _parent.name != pointCloud.header.frame_id)
+        if (_parent == null || _parent.name != pointCloud.header.frame_id)
         {
             UpdatePose(pointCloud.header.frame_id);
         }
-        if(pointCloud.data.Length == 0) return;
+        if (pointCloud.data.Length == 0) return;
 
-        _ptData.SetData(LidarUtils.ExtractXYZI(pointCloud, displayPts, rgbd, out _numPts));
+        _ptData.SetData(LidarUtils.ExtractXYZI(pointCloud, displayPts, vizType, out _numPts));
     }
 
     public void OnTopicChange(string topic)
     {
-        if(this.topic != null)
+        if (this.topic != null)
         {
             _ros.Unsubscribe(this.topic);
             this.topic = null;
         }
-        if(topic == null)
+        if (topic == null)
         {
             Debug.Log("Disabling pointcloud display");
             _enabled = false;
@@ -236,22 +250,23 @@ public class LidarDrawer : MonoBehaviour
 
     public void OnSizeChange(float size)
     {
-        scale = size/10f;
+        scale = size / 10f;
         renderParams.matProps.SetFloat("_PointSize", scale);
     }
 
     public void ToggleEnabled()
     {
         _enabled = !_enabled;
-        if(!_enabled)
+        if (!_enabled)
         {
             _ros.Unsubscribe(topic);
             _parent = null;
-        } else
+        }
+        else
         {
             _ros.Subscribe<PointCloud2Msg>(topic, OnPointcloud);
         }
     }
 
-    
+
 }

@@ -29,11 +29,26 @@ public class LidarUtils
         return mesh;
     }
 
-    public static byte[] ExtractXYZI(PointCloud2Msg data, int maxPts, bool rgbd, out int numPts)
+    public static byte[] ExtractXYZI(PointCloud2Msg data, int maxPts, VizType vizType, out int numPts)
     {
+
+        /**
+        For different data type the order is 
+        Lidar: x, y, z, intensity
+        RGBD: x, y, z, rgb0
+        RGBD Mesh: ??
+        Splat: x, y, z, rgba, scalex, scaley, scalez, rot0, rot1, rot2, rot3, nx, ny, nz, fc_dc_0, fc_dc_1, fc_dc_2, opacity
+        */
+
         // Just in case...
         if(maxPts < 1) maxPts = 1;
         int decmiator = 1;
+
+        int data_size = (int)vizType;
+        if(data_size % 2 == 1) // In case we are rgbdmesh
+        {
+            data_size -= 1;
+        }
         
         // Assumes x, y, z, intensity are the first 4 fields
         numPts = (int)(data.data.Length / data.point_step);
@@ -43,34 +58,44 @@ public class LidarUtils
             decmiator = Mathf.CeilToInt((float)numPts / maxPts);
             numPts = numPts / decmiator;
         }
-        byte[] outData = new byte[numPts * 4 * (4 + (rgbd ? 2 : 0))];
+        byte[] outData = new byte[numPts * (int) vizType];
 
         for(int i = 0; i < numPts; i++)
         {
 
             int inIdx = (int)(i * data.point_step * (decmiator));
-            int outIdx = i * 4 * (4 + (rgbd ? 2 : 0));
-            for(int j = 0; j < 4; j++)
+            int outIdx = i * data_size;
+            int outOffset = 0;
+            for(int j = 0; j < (vizType == VizType.Splat ? 14 : 4); j++)
             {
-                if(j == 3 && rgbd)
+                // Special case for rgb(a) unpacking in non Lidar cases
+                if(j == 3 && vizType != VizType.Lidar)
                 {
                     // convert the reinterpret_cast<float&> to int, then extract the rgb bytes
                     int intensity = System.BitConverter.ToInt32(data.data, inIdx + (int)data.fields[3].offset);
                     ushort r = (ushort)(intensity >> 16 & 0xff);
                     ushort g = (ushort)(intensity >> 8 & 0xff);
-                    ushort b = (ushort)(intensity & 0xff);
+                    ushort b = (ushort)(intensity >> 0 & 0xff);
+                    ushort a = (ushort)(intensity >> 24 & 0xff);
 
                     // convert to floats
                     float rf = r / 255.0f;
                     float gf = g / 255.0f;
                     float bf = b / 255.0f;
+                    float af = a / 255.0f;
 
 
                     // write to outData
-                    System.BitConverter.GetBytes(rf).CopyTo(outData, outIdx + j * 4);
-                    System.BitConverter.GetBytes(gf).CopyTo(outData, outIdx + j * 4 + 4);
-                    System.BitConverter.GetBytes(bf).CopyTo(outData, outIdx + j * 4 + 8);
+                    System.BitConverter.GetBytes(rf).CopyTo(outData, outIdx + outOffset);
+                    System.BitConverter.GetBytes(gf).CopyTo(outData, outIdx + outOffset + 4);
+                    System.BitConverter.GetBytes(bf).CopyTo(outData, outIdx + outOffset + 8);
+                    if(vizType == VizType.Splat)
+                    {
+                        System.BitConverter.GetBytes(af).CopyTo(outData, outIdx + outOffset + 12);
+                        outOffset+=4;
 
+                    }
+                    outOffset+=4*3;
 
                 }
                 else
@@ -78,8 +103,9 @@ public class LidarUtils
                     // copy over the 4 bytes of the float
                     for(int k = 0; k < 4; k++)
                     {
-                        outData[outIdx + j * 4 + k] = data.data[inIdx + j * 4 + k];
+                        outData[outIdx + j * 4 + k] = data.data[inIdx + outOffset + k];
                     }
+                    outOffset += 4;
                 }
             }
         }

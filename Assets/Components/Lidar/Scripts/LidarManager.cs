@@ -129,6 +129,9 @@ public class LidarManager : MonoBehaviour
         {
             Debug.LogWarning("No PointCloud2 topics found!");
             return;
+        } else
+        {
+            Debug.Log("Found " + (topicList.Count - 1) + " PointCloud2 topics: " + string.Join(", ", topicList.GetRange(1, topicList.Count - 1).ToArray()));
         }
 
         topicDropdown.ClearOptions();

@@ -144,8 +144,12 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5016077939771438845, guid: 779d8cdef64feca43b204c458230f838, type: 3}
+      propertyPath: topic
+      value: /splat
+      objectReference: {fileID: 0}
+    - target: {fileID: 5016077939771438845, guid: 779d8cdef64feca43b204c458230f838, type: 3}
       propertyPath: vizType
-      value: 1
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 5226770742212695535, guid: 779d8cdef64feca43b204c458230f838, type: 3}
       propertyPath: m_LocalPosition.x
@@ -852,6 +856,7 @@ MonoBehaviour:
   lidar_material: {fileID: 2100000, guid: cff58e95e3efb7ea995ef3989b51e681, type: 2}
   rgbd_material: {fileID: 2100000, guid: b010de748c08a6d40b3f631265381ff6, type: 2}
   rgbd_mesh_material: {fileID: 0}
+  splat_material: {fileID: 0}
   scale: 0.005
   maxPts: 1000000
   displayPts: 1000

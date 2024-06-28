@@ -94,16 +94,13 @@ public class HandPub : MonoBehaviour
                     string jointNeeded = jointMap.ContainsKey(i) ? "" : "not ";
                     Debug.LogError("Joint " + i + " not found in joint layout, " + jointNeeded + "needed");
                 }
-                Debug.Log("All joints valid");
             }
             
         }
-        Debug.Log("hand setup");
         ros = ROSConnection.GetOrCreateInstance();
         ros.RegisterPublisher<ManoLandmarksMsg>(_landmarksTopic);
         ros.RegisterPublisher<PointCloudMsg>(_pointCloudTopic);
         ros.RegisterPublisher<HandGestureMsg>(_gestureTopic);
-        Debug.Log("ros setup"); 
 
         // setup action map listeners
         twistController.action.performed += _ => PubTwistController();

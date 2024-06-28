@@ -47,12 +47,13 @@ MonoBehaviour:
   lidar_material: {fileID: 2100000, guid: cff58e95e3efb7ea995ef3989b51e681, type: 2}
   rgbd_material: {fileID: 2100000, guid: b010de748c08a6d40b3f631265381ff6, type: 2}
   rgbd_mesh_material: {fileID: 2100000, guid: 3c67275e4fc6fc13a91d3a8184ad1fe4, type: 2}
+  splat_material: {fileID: 2100000, guid: 959e2bbbae6bbdf11b70ec857876d15f, type: 2}
   scale: 0.01
   maxPts: 100000
   displayPts: 100000
   sides: 3
   topic: /camera/depth/color/points
-  vizType: 1
+  vizType: 16
   _enabled: 0
   _parent: {fileID: 0}
   p: {fileID: 0}

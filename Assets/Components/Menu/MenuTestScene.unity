@@ -561,8 +561,16 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 887960454935771931, guid: 284c18ecc4f72ec20968371b116bf40b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 402807989}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 642357313099201138, guid: 284c18ecc4f72ec20968371b116bf40b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1842672617}
   m_SourcePrefab: {fileID: 100100000, guid: 284c18ecc4f72ec20968371b116bf40b, type: 3}
+--- !u!1 &1049524781 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 642357313099201138, guid: 284c18ecc4f72ec20968371b116bf40b, type: 3}
+  m_PrefabInstance: {fileID: 1049524780}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1400740529
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -686,12 +694,32 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7822572827452104195, guid: 284c18ecc4f72ec20968371b116bf40b, type: 3}
   m_PrefabInstance: {fileID: 1049524780}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1049524781}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72af214bc5607c2d5a6d2739fa7249c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1842672617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1049524781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ba43a79e27b77842a9dc3777dfc3e1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentRobot:
+    RobotName: 
+    modelRoot: {fileID: 0}
+    RobotSprite: {fileID: 0}
+  showRobotSprite: {fileID: 0}
+  hideRobotSprite: {fileID: 0}
+  toggleModel: {fileID: 0}
+  startVisible: 1
 --- !u!1001 &1961939926
 PrefabInstance:
   m_ObjectHideFlags: 0
