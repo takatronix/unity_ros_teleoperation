@@ -100,7 +100,7 @@ public class CameraManager : MonoBehaviour
     {
         GameObject img = Instantiate(imagePrefab, transform.position + (transform.right * 0.5f), Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up));
         img.GetComponent<ImageView>().manager = this;
-        img.GetComponent<ImageView>()._tracking = _allTracking;
+        img.GetComponent<ImageView>().ToggleTrack(_allTracking ? 1: 0);
         imgs.Add(img);
         Count.text = imgs.Count.ToString();
     }
@@ -109,7 +109,7 @@ public class CameraManager : MonoBehaviour
     {
         GameObject img = Instantiate(stereoPrefab, transform.position + (transform.right * 0.5f), Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up));
         img.GetComponent<StereoStreamer>().manager = this;
-        img.GetComponent<StereoStreamer>()._tracking = _allTracking;
+        img.GetComponent<StereoStreamer>().ToggleTrack(_allTracking ? 1: 0);
         imgs.Add(img);
         Count.text = imgs.Count.ToString();
     }
@@ -119,7 +119,7 @@ public class CameraManager : MonoBehaviour
         _allTracking = !_allTracking;
         foreach (GameObject img in imgs)
         {
-            img.GetComponent<ImageView>()._tracking = _allTracking;
+            img.GetComponent<ImageView>().ToggleTrack(_allTracking ? 1: 0);
         }
         _icon.sprite = _allTracking ? tracked : untracked;
     }
@@ -173,14 +173,14 @@ public class CameraManager : MonoBehaviour
                 stereo.transform.localScale = img.scale;
                 stereo.GetComponent<StereoStreamer>().Deserialize(d);
                 stereo.GetComponent<StereoStreamer>().manager = this;
-                stereo.GetComponent<StereoStreamer>()._tracking = _allTracking;
+                // stereo.GetComponent<StereoStreamer>()._tracking = _allTracking;
                 imgs.Add(stereo);
             } else {
                 GameObject image = Instantiate(imagePrefab, img.position, img.rotation);
                 image.transform.localScale = img.scale;
                 image.GetComponent<ImageView>().Deserialize(d);
                 image.GetComponent<ImageView>().manager = this;
-                image.GetComponent<ImageView>()._tracking = _allTracking;
+                // image.GetComponent<ImageView>()._tracking = _allTracking;
                 imgs.Add(image);
             }                
         }

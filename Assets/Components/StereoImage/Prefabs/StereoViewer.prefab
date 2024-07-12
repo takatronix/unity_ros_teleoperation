@@ -4168,10 +4168,11 @@ MonoBehaviour:
   topMenu: {fileID: 8040841155255903590}
   manager: {fileID: 0}
   name: {fileID: 3623718738341701378}
-  untracked: {fileID: 0}
-  tracked: {fileID: 0}
+  untracked: {fileID: 3286163911610860551, guid: d60032fc7bdc8db91b454ee5c68f9105, type: 3}
+  tracked: {fileID: 3286163911610860551, guid: 59f25925f06319d02925dc6f372d08c3, type: 3}
+  headTracked: {fileID: 3286163911610860551, guid: 0eebeed137c5a666e810befadd04c4b5, type: 3}
   debayer: {fileID: 0}
   material: {fileID: 0}
   topicName: 
-  _tracking: 0
+  _trackingState: 0
   debayerType: 3

@@ -209,24 +209,34 @@ public class StereoStreamer : ImageView
 
     public override void Deserialize(string data)
     {
-        ImageData imgData = JsonUtility.FromJson<ImageData>(data);
-        transform.position = imgData.position;
-        transform.rotation = imgData.rotation;
-        transform.localScale = imgData.scale;
+        try{
+            ImageData imgData = JsonUtility.FromJson<ImageData>(data);
 
-        topicName = imgData.topicName;
-        _tracking = imgData.tracking;
+            transform.position = imgData.position;
+            transform.rotation = imgData.rotation;
+            transform.localScale = imgData.scale;
+            _trackingState = imgData.trackingState;
 
-        if(topicName == null)
-        {
-            return;
+            topicName = imgData.topicName;
+
+            if(topicName == null)
+            {
+                return;
+            }
+
+            name.text = topicName;
+            ros.Subscribe<CompressedImageMsg>(topicName, OnCompressedLeft);
+            ros.Subscribe<CompressedImageMsg>(topicName.Replace("left", "right"), OnCompressedRight);
         }
-
-        name.text = topicName;
-        ros.Subscribe<CompressedImageMsg>(topicName, OnCompressedLeft);
-        ros.Subscribe<CompressedImageMsg>(topicName.Replace("left", "right"), OnCompressedRight);
+        catch (System.Exception e)
+        {
+            Debug.LogError(e);
+            Debug.LogError("Error deserializing image data! Most likely old data format, clearing prefs");
+            PlayerPrefs.DeleteKey("layout");
+            PlayerPrefs.Save();
+        }
+        
     }
-
     public override string Serialize()
     {
         ImageData imgData = JsonUtility.FromJson<ImageData>(base.Serialize());

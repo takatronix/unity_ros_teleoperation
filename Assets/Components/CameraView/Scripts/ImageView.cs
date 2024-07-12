@@ -54,7 +54,7 @@ public struct ImageData
     public Quaternion rotation;
     public Vector3 scale;
     public string topicName;
-    public bool tracking;
+    public int trackingState;
     public bool flip;
     public bool stereo;
 }
@@ -68,6 +68,7 @@ public class ImageView : MonoBehaviour
     public TMPro.TextMeshProUGUI name;
     public Sprite untracked;
     public Sprite tracked;
+    public Sprite headTracked;
     public ComputeShader debayer;
     public Material material;
 
@@ -78,10 +79,12 @@ public class ImageView : MonoBehaviour
 
     protected int _lastSelected = 0;
 
-    public bool _tracking = false;
     protected GameObject _frustrum;
     protected Image _icon;
     protected ROSConnection ros;
+
+    public int _trackingState = 0;
+    protected Sprite[] icons;
 
     public enum DebayerMode
     {
@@ -161,6 +164,9 @@ public class ImageView : MonoBehaviour
         ros = ROSConnection.GetOrCreateInstance();
         name.text = "None";
 
+        icons = new Sprite[] {untracked, tracked, headTracked};
+        _icon = topMenu.transform.Find("Track/Image/Image").GetComponent<Image>();
+
     }
 
     void Start()
@@ -175,7 +181,6 @@ public class ImageView : MonoBehaviour
 
         ros.GetTopicAndTypeList(UpdateTopics);
 
-        _icon = topMenu.transform.Find("Track/Image/Image").GetComponent<Image>();
         _frustrum = transform.Find("Frustrum").gameObject;
     }
 
@@ -214,11 +219,18 @@ public class ImageView : MonoBehaviour
         manager.Remove(gameObject);
     }
 
+    public void ToggleTrack(int newState)
+    {
+        _trackingState = newState;
+
+        _trackingState = _trackingState % 3;
+
+        _icon.sprite = icons[_trackingState];
+    }
+
     public void ToggleTrack()
     {
-        _tracking = !_tracking;
-
-        _icon.sprite = _tracking ? tracked : untracked;
+        ToggleTrack(_trackingState + 1);
         dropdown.gameObject.SetActive(false);
         topMenu.SetActive(false);
     }
@@ -322,7 +334,7 @@ public class ImageView : MonoBehaviour
 
     protected void ParseHeader(HeaderMsg header)
     {
-        if (_tracking)
+        if (_trackingState == 1)
         {
             // If we are tracking to the TF, update the parent
             if(header.frame_id != null && (transform.parent == null || header.frame_id != transform.parent.name))
@@ -332,7 +344,7 @@ public class ImageView : MonoBehaviour
                 UpdatePose(header.frame_id);
             }
 
-        } else if (transform.parent != null && transform.parent.name != "odom")
+        } else if (_trackingState == 0 && transform.parent != null && transform.parent.name != "odom")
         {
             _frustrum.SetActive(false);
             // Otherwise, set the parent to the odom frame but keep the current position
@@ -341,6 +353,11 @@ public class ImageView : MonoBehaviour
             UpdatePose("odom");
             transform.position = pos;
             transform.rotation = rot;
+        } else  if (_trackingState == 2 && transform.parent != Camera.main.transform)
+        {
+            // in head tracking mode so we want the parent to be the camera
+            transform.parent = Camera.main.transform;
+            _frustrum.SetActive(false);
         }
     }
 
@@ -399,24 +416,33 @@ public class ImageView : MonoBehaviour
 
     public virtual void Deserialize(string data)
     {
-        ImageData imgData = JsonUtility.FromJson<ImageData>(data);
-        transform.position = imgData.position;
-        transform.rotation = imgData.rotation;
-        transform.localScale = imgData.scale;
-        topicName = imgData.topicName;
-        _tracking = imgData.tracking;
+        try{
+            ImageData imgData = JsonUtility.FromJson<ImageData>(data);
+            
+            transform.position = imgData.position;
+            transform.rotation = imgData.rotation;
+            transform.localScale = imgData.scale;
+            topicName = imgData.topicName;
+            _trackingState = imgData.trackingState;
 
-        if (topicName.EndsWith("compressed"))
-        {
-            ros.Subscribe<CompressedImageMsg>(topicName, OnCompressed);
-            name.text = topicName;
+            if (topicName.EndsWith("compressed"))
+            {
+                ros.Subscribe<CompressedImageMsg>(topicName, OnCompressed);
+                name.text = topicName;
+            }
+            else if (topicName != null)
+            {
+                ros.Subscribe<ImageMsg>(topicName, OnImage);
+                name.text = topicName;
+            }
         }
-        else if (topicName != null)
+        catch (System.Exception e)
         {
-            ros.Subscribe<ImageMsg>(topicName, OnImage);
-            name.text = topicName;
+            Debug.LogError(e);
+            Debug.LogError("Error deserializing image data! Most likely old data format, clearing prefs");
+            PlayerPrefs.DeleteKey("layout");
+            PlayerPrefs.Save();
         }
-
     }
 
     public virtual string Serialize()
@@ -426,7 +452,7 @@ public class ImageView : MonoBehaviour
         data.rotation = transform.rotation;
         data.scale = transform.localScale;
         data.topicName = topicName;
-        data.tracking = _tracking;
+        data.trackingState = _trackingState;
         data.flip = false;
         data.stereo = false;
 
