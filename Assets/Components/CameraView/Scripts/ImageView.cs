@@ -149,7 +149,7 @@ public class ImageView : MonoBehaviour
         return false;
     }
 
-    void UpdatePose(string frame)
+    protected void UpdatePose(string frame)
     {
         // CleanTF(frame);
         
@@ -172,7 +172,7 @@ public class ImageView : MonoBehaviour
 
     }
 
-    void Start()
+    protected virtual void Start()
     {
         _Img = transform.Find("Img");
         material = _Img.GetComponent<MeshRenderer>().material;
@@ -184,8 +184,8 @@ public class ImageView : MonoBehaviour
 
         ros.GetTopicAndTypeList(UpdateTopics);
 
-        _frustrum = transform.Find("Frustrum").gameObject;
-        _frustrum.SetActive(false);
+        _frustrum = transform.Find("Frustrum")?.gameObject;
+        _frustrum?.SetActive(false);
 
         _root = GameObject.Find("odom");
     }
@@ -255,7 +255,7 @@ public class ImageView : MonoBehaviour
         transform.localScale *= 0.9f;
     }
 
-    public void OnClick()
+    public virtual void OnClick()
     {
         ros.GetTopicAndTypeList(UpdateTopics);
         dropdown.gameObject.SetActive(!dropdown.gameObject.activeSelf);
@@ -338,21 +338,21 @@ public class ImageView : MonoBehaviour
         _Img.localScale = new Vector3(width, 1, height);
     }
 
-    protected void ParseHeader(HeaderMsg header)
+    protected virtual void ParseHeader(HeaderMsg header)
     {
         if (_trackingState == 1)
         {
             // If we are tracking to the TF, update the parent
             if(header.frame_id != null && (transform.parent == null || header.frame_id != transform.parent.name))
             {
-                _frustrum.SetActive(true);
+                _frustrum?.SetActive(true);
                 // If the parent is not the same as the frame_id, update the parent
                 UpdatePose(header.frame_id);
             }
 
         } else if (_trackingState == 0 && transform.parent != null && transform.parent.name != "odom")
         {
-            _frustrum.SetActive(false);
+            _frustrum?.SetActive(false);
             // Otherwise, set the parent to the odom frame but keep the current position
             Vector3 pos = transform.position;
             Quaternion rot = transform.rotation;
@@ -363,7 +363,7 @@ public class ImageView : MonoBehaviour
         {
             // in head tracking mode so we want the parent to be the camera
             transform.parent = Camera.main.transform;
-            _frustrum.SetActive(false);
+            _frustrum?.SetActive(false);
         }
     }
 

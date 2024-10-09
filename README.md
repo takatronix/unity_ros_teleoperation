@@ -1,3 +1,4 @@
+
 # Unity ROS Teleoperation Project
 
 
@@ -29,7 +30,7 @@ On the ROS side, the custom [TCP Endpoint](https://github.com/leggedrobotics/ROS
 | Voxblox | Voxel mesh rendering | [Assets/Components/VoxBlox](Assets/Components/VoxBlox) | ![](/docs/images/vox.gif) | Functional |
 | VR Debug | Debugging tools for VR, namely a console | [Assets/Components/VRDebug](Assets/Components/VRDebug) | ![](/docs/images/vr_console.jpg) | Functional |
 | VR Streamer | Streams a the VR view to a ROS topic (w/o AR view) | [Assets/Components/VRStreamer](Assets/Components/VRStreamer) | ![](/docs/images/streamer.jpg) | Functional |
-
+| Tactile Images | Displays tactile images on finger tips | [Assets/Components/TactileImages](Assets/Components/TactileImages) | ![](/docs/images/tactile.gif) | Functional |
 
 
 ## Scenes

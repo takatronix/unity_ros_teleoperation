@@ -38,9 +38,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Components/VRStreamer/VRStreamerTester.unity
     guid: 9fd76377db89753458ba399dd20b39f3
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Main.unity
     guid: 10fc7d2cde719dc5dab5ea8a37b46803
+  - enabled: 1
+    path: Assets/Components/TactileImages/TactileImagesTestScene.unity
+    guid: c0c9f40045a04148a9c0732148a582ce
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: d692ced636ecadb9a99ecb6e0247e7b6, type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 9502fd768ba2eebf9a447f1eb9e39f11, type: 2}

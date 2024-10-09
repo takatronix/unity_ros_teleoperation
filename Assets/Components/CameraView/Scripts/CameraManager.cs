@@ -60,6 +60,7 @@ public class CameraManager : MonoBehaviour
     public GameObject menu;
     public GameObject imagePrefab;
     public GameObject stereoPrefab;
+    public GameObject tactilePrefab;
     public TMPro.TextMeshProUGUI Count;
     public Sprite untracked;
     public Sprite tracked;
@@ -110,6 +111,14 @@ public class CameraManager : MonoBehaviour
         GameObject img = Instantiate(stereoPrefab, transform.position + (transform.right * 0.5f), Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up));
         img.GetComponent<StereoStreamer>().manager = this;
         img.GetComponent<StereoStreamer>().ToggleTrack(_allTracking ? 1: 0);
+        imgs.Add(img);
+        Count.text = imgs.Count.ToString();
+    }
+
+    public void AddTactile()
+    {
+        GameObject img = Instantiate(tactilePrefab, transform.position + (transform.right * 0.5f), Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up));
+        img.GetComponent<TactileImageView>().manager = this;
         imgs.Add(img);
         Count.text = imgs.Count.ToString();
     }
