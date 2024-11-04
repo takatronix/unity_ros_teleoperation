@@ -38,6 +38,10 @@ public class LidarManagerEditor : Editor
         {
             myScript.OnTopicSelect(1);
         }
+        if (GUILayout.Button("Toggle MapGrid"))
+        {
+            myScript.ToggleGridMap();
+        }
     }
 }
 
@@ -58,6 +62,8 @@ public class LidarManager : MonoBehaviour
 
     private bool _lidarClicked;
 
+    private GridMapVisualizer _gridMapVisualizer;
+
     public GameObject menu;
 
     private ROSConnection ros;
@@ -66,6 +72,12 @@ public class LidarManager : MonoBehaviour
     void Start()
     {
         ros = ROSConnection.GetOrCreateInstance();
+
+        _gridMapVisualizer = FindObjectOfType<GridMapVisualizer>();
+        if (_gridMapVisualizer == null)
+        {
+            Debug.LogWarning("No GridMapVisualizer found in scene!");
+        }
 
         _lidarTopic = lidarTopic.text;
         _rgbdTopic = rgbdTopic.text;
@@ -222,6 +234,14 @@ public class LidarManager : MonoBehaviour
     public void RGBD()
     {
         rgbdDrawer.ToggleEnabled();
+    }
+
+    public void ToggleGridMap()
+    {
+        if(_gridMapVisualizer != null)
+        {
+            _gridMapVisualizer.gameObject.SetActive(!_gridMapVisualizer.gameObject.activeSelf);
+        }
     }
 
 }
