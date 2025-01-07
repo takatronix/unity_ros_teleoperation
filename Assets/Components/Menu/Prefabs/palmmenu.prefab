@@ -735,7 +735,7 @@ RectTransform:
   m_GameObject: {fileID: 642357313099201138}
   m_LocalRotation: {x: 0.33682406, y: -0.16317599, z: 0.059391193, w: 0.92541665}
   m_LocalPosition: {x: 0, y: 0, z: 14}
-  m_LocalScale: {x: 0.09999998, y: 0.099999994, z: 0.10000001}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.10000001}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5304048636878885531}
@@ -828,6 +828,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   robots:
+  - name: None
+    modelRoot: {fileID: 1880815937606192030, guid: be6c48846e210bd06a0a91e244c843dc, type: 3}
+    RobotSprite: {fileID: 0}
   - name: ALMA
     modelRoot: {fileID: 1598719177831470820, guid: 6f8a8d44d61f84fcfa0c4bfa06d7793c, type: 3}
     RobotSprite: {fileID: 0}

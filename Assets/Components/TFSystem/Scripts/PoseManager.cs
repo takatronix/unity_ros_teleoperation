@@ -58,6 +58,7 @@ public class PoseManager : MonoBehaviour
     public float speed = 1.0f;
     public float rotationTolerance = 5.0f;
     public bool handSelectable = false;
+    public bool findRoot = true;
     public Transform root;
     public Transform _root;
     private Transform _mainCamera;
@@ -126,12 +127,16 @@ public class PoseManager : MonoBehaviour
             _robot = robot.transform;
         }
 
-        while (root.parent != null)
+        while (root.parent != null && findRoot)
         {
             root = root.parent;
             _root = root;
             Debug.Log("root frame: " + root);
 
+        }
+        if (_root == null)
+        {
+            _root = root;
         }
 
         if(_fixedLocation)
@@ -257,5 +262,10 @@ public class PoseManager : MonoBehaviour
             _root.Rotate(0, angle, 0);
         }
 
+    }
+
+    public void ToggleLocked()
+    {
+        _locked = !_locked;
     }
 }

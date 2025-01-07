@@ -3,6 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+
+#if UNITY_EDITOR
+using UnityEditor;
+
+[CustomEditor(typeof(StatusIndicator))]
+public class StatusIndicatorEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        StatusIndicator myScript = (StatusIndicator)target;
+        if (GUILayout.Button("Toggle"))
+        {
+            myScript.gameObject.GetComponent<Button>().onClick.Invoke();
+        }
+    }
+}
+#endif
+
 public class StatusIndicator : MonoBehaviour
 {
     public Sprite neutralIcon;
