@@ -23,6 +23,7 @@ public class LidarDrawerEditor : Editor
         {
             myScript.ToggleEnabled();
         }
+        GUILayout.Label("Number of Points: " + myScript._numPts);
     }
 }
 #endif
@@ -90,7 +91,7 @@ public class LidarDrawer : MonoBehaviour
     public GameObject _parent;
     private bool _missingParent = false;
     private bool rgbd = false;
-    private int _numPts = 0;
+    public int _numPts = 0;
 
     public GameObject p;
 

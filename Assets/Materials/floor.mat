@@ -121,14 +121,14 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Size: 0.5
+    - _Size: 0.92
     - _Smoothness: 0.421
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 1
-    - _Thickness: 0.015
+    - _Thickness: 0.027
     - _WorkflowMode: 1
     - _ZWrite: 0
     m_Colors:

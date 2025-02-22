@@ -47,18 +47,31 @@ Shader "Unlit/Splat"
             {
                 v2f o;
                 float3 pos = _PointData[instanceID].position;
-                float2 uv = _Positions[_BaseVertexIndex + vertexID] * _PointSize;
-                uv /= float2(_ScreenParams.x/_ScreenParams.y, 1);
+                float2 uv = _Positions[_BaseVertexIndex + vertexID];
 
-                // uv *= _PointData[instanceID].scale.xy;
+
+                float3 centerWorldPos = mul(_ObjectToWorld, float4(pos, 1.0f)).xyz;
+                float4 centerClipPos = mul(UNITY_MATRIX_VP, float4(centerWorldPos, 1.0f));
+                
+                float4 rot = float4(0, 0, 0, 1);
+
+                float3 scale = _PointData[instanceID].scale;
+                scale.y = scale.z;
+                scale.z = _PointData[instanceID].scale.y;
+
+                // float2 delta = ApplyCovariance(_PointData[instanceID].scale, rot, pos, _PointSize, uv);
+                float2 delta = ApplyCovariance(_PointData[instanceID].scale, _PointData[instanceID].rotation, pos, _PointSize, uv);
+
                 float4 wpos = mul(_ObjectToWorld, float4(pos, 1.0f));
+                o.pos = centerClipPos;
+                o.pos.xy += delta * centerClipPos.w;
 
+                if(_PointData[instanceID].opacity < 0.9)
+                {
+                    o.pos = asfloat(0x7fc00000);
+                }
 
-
-                o.pos = mul(UNITY_MATRIX_VP, wpos) + float4(uv,0,0);
                 o.color = UnpackRGBA(_PointData[instanceID].color);
-
-                // o.color.r = _PointData[instanceID].scale.x == 0 ? 1 : 0;
                 return o;
             }
 
