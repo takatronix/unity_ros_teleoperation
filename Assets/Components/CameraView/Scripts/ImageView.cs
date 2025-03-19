@@ -52,23 +52,18 @@ public class ImageViewEditor : Editor
 #endif
 
 [System.Serializable]
-public struct ImageData
+public class ImageData : ISensorData
 {
-    public Vector3 position;
-    public Quaternion rotation;
-    public Vector3 scale;
-    public string topicName;
     public int trackingState;
     public bool flip;
     public bool stereo;
 }
 
 [System.Serializable]
-public class ImageView : MonoBehaviour
+public class ImageView : SensorStream
 {
     public Dropdown dropdown;
     public GameObject topMenu;
-    public CameraManager manager;
     public TMPro.TextMeshProUGUI name;
     public Sprite untracked;
     public Sprite tracked;
@@ -232,7 +227,7 @@ public class ImageView : MonoBehaviour
         manager.Remove(gameObject);
     }
 
-    public void ToggleTrack(int newState)
+    public override void ToggleTrack(int newState)
     {
         _trackingState = newState;
 
@@ -427,7 +422,7 @@ public class ImageView : MonoBehaviour
         Resize();
     }
 
-    public virtual void Deserialize(string data)
+    public override void Deserialize(string data)
     {
         try{
             ImageData imgData = JsonUtility.FromJson<ImageData>(data);
@@ -458,7 +453,7 @@ public class ImageView : MonoBehaviour
         }
     }
 
-    public virtual string Serialize()
+    public override string Serialize()
     {
         ImageData data = new ImageData();
         data.position = transform.position;

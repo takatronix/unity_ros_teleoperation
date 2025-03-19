@@ -3935,7 +3935,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 5
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &5230880497370916528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4164,9 +4164,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb4f863784acc75fbd006580faa902b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 0}
   dropdown: {fileID: 670061393679834295}
   topMenu: {fileID: 8040841155255903590}
-  manager: {fileID: 0}
   name: {fileID: 3623718738341701378}
   untracked: {fileID: 3286163911610860551, guid: d60032fc7bdc8db91b454ee5c68f9105, type: 3}
   tracked: {fileID: 3286163911610860551, guid: 59f25925f06319d02925dc6f372d08c3, type: 3}
