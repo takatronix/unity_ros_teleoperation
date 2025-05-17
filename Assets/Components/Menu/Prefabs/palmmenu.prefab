@@ -10177,6 +10177,7 @@ GameObject:
   - component: {fileID: 9139435174521366618}
   - component: {fileID: 4788897041477323845}
   - component: {fileID: 4237420357206137021}
+  - component: {fileID: 2105158297950331201}
   m_Layer: 0
   m_Name: palmmenu
   m_TagString: Untagged
@@ -10506,6 +10507,18 @@ MonoBehaviour:
   useHand: 0
   speed: 0.75
   offset: {x: 0, y: 0.25, z: 0}
+--- !u!114 &2105158297950331201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8605111556703751387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d8cf2ba5a25893029fb53ec968f9805, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8774021543082300908
 GameObject:
   m_ObjectHideFlags: 0
