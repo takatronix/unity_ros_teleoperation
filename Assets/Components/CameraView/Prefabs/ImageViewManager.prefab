@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: ImageView
-  tag: camera
+  tag: Cameras
   sensorPrefab: {fileID: 7709393259870508619, guid: 2a50976a1f24dd8098ca2921520cdf15, type: 3}
   Count: {fileID: 5928739823399356738}
   trackingSprites:

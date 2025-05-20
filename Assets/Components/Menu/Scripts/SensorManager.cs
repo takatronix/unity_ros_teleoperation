@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using Unity.Robotics.ROSTCPConnector;
 using UnityEngine.UI;
+using System;
+
 
 
 #if UNITY_EDITOR
@@ -62,7 +64,7 @@ public class ISensorData
 /// such as cameras, depth, services etc.
 /// </summary>
 
-public abstract class SensorManager : MonoBehaviour
+public abstract class SensorManager : MonoBehaviour, IComparable<SensorManager>
 {
     public string name = "DEFAULT";
     public string tag = "default";
@@ -149,5 +151,11 @@ public abstract class SensorManager : MonoBehaviour
             sensors.Add(image);  
         }
         Count.text = sensors.Count.ToString();
+    }
+
+    public int CompareTo(SensorManager other)
+    {
+        if (other == null) return 1;
+        return string.Compare(name, other.name, StringComparison.Ordinal);
     }
 }
