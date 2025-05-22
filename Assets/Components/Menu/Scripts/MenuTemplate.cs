@@ -119,16 +119,14 @@ public class MenuTemplate : MonoBehaviour
         // and destroy and headers
         for (int i = menu.transform.childCount - 1; i >= 0; i--)
         {
-            Transform child = menu.transform.GetChild(0);
-            Debug.Log("Cleaning: " + child.name);
+            Transform child = menu.transform.GetChild(i);
             if (child.GetComponent<SensorManager>() != null)
             {
-                child.transform.SetParent(null);
                 child.transform.localPosition = Vector3.zero;
                 child.transform.localRotation = Quaternion.identity;
                 child.transform.localScale = Vector3.one;
             }
-            else 
+            else
             {
                 DestroyImmediate(child.gameObject);
             }
