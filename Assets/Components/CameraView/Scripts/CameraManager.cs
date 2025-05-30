@@ -42,7 +42,8 @@ public class CameraManager : SensorManager
             _trackedState = 0;
 
         foreach (var sensor in sensors)
-        {
+        {   
+            Debug.Log("CameraManager -> Headtracking");
             sensor.GetComponent<SensorStream>().ToggleTrack(_trackedState);
         }
 

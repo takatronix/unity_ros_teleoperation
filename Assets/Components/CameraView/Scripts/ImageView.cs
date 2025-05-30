@@ -341,7 +341,7 @@ public class ImageView : SensorStream
     }
 
     protected virtual void ParseHeader(HeaderMsg header)
-    {
+    {   
         if (_trackingState == 2)
         {
             // If we are tracking to the TF, update the parent
@@ -364,6 +364,7 @@ public class ImageView : SensorStream
         } else  if (_trackingState == 1 && transform.parent != Camera.main.transform)
         {
             // in head tracking mode so we want the parent to be the camera
+            
             transform.parent = Camera.main.transform;
             _frustrum?.SetActive(false);
         }
