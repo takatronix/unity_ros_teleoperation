@@ -846,6 +846,9 @@ MonoBehaviour:
   - name: Panda
     modelRoot: {fileID: 1880815937606192030, guid: 323fe8428e8c26653b59e326d7c5bb49, type: 3}
     RobotSprite: {fileID: 0}
+  - name: Spot
+    modelRoot: {fileID: 3024264895205041345, guid: 859745799be9b534bb0314649c2c1b6d, type: 3}
+    RobotSprite: {fileID: 0}
   startRobotIndex: 3
   currentRobot:
     name: 
