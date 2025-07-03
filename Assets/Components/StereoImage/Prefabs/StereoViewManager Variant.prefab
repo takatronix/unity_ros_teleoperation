@@ -108,6 +108,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StereoViewManager Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 6119694999395538454, guid: 4d017a92a686a1b49b37796f4382abcd, type: 3}
+      propertyPath: m_text
+      value: Stereo Views
+      objectReference: {fileID: 0}
     - target: {fileID: 8279031515717943549, guid: 4d017a92a686a1b49b37796f4382abcd, type: 3}
       propertyPath: name
       value: StereoView

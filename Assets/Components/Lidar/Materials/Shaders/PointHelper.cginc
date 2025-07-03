@@ -1,10 +1,10 @@
 // Helper functions for point cloud shaders
 
 // Unpacks a 32-bit RGBA color into a float4
-float4 UnpackRGBA(int rgba)
+float4 UnpackRGBA(float rgba)
 {
     int4 unpackedColor;
-    int unpacked = rgba;
+    int unpacked = asint(rgba);
 
     unpackedColor.r = unpacked >> 16 & 0xFF;
     unpackedColor.g = unpacked >> 8 & 0xFF;

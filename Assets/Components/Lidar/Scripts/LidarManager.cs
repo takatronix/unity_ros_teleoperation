@@ -47,10 +47,10 @@ public class LidarManagerEditor : Editor
 
 #endif
 
-public class LidarManager : MonoBehaviour
+public class LidarManager : SensorManager
 {
-    public LidarDrawer lidarDrawer;
-    public LidarDrawer rgbdDrawer;
+    public LidarStream lidarStreamer;
+    public LidarStream rgbdStreamer;
 
     public TMPro.TextMeshProUGUI lidarTopic;
     public TMPro.TextMeshProUGUI rgbdTopic;
@@ -94,8 +94,8 @@ public class LidarManager : MonoBehaviour
         lidarTopic.text = _lidarTopic;
         rgbdTopic.text = _rgbdTopic;
 
-        lidarDrawer.topic = _lidarTopic;
-        rgbdDrawer.topic = _rgbdTopic;
+        lidarStreamer.topic = _lidarTopic;
+        rgbdStreamer.topic = _rgbdTopic;
 
         lidarTopic.transform.parent.GetComponent<Button>().onClick.AddListener(OnLidarClick);
         rgbdTopic.transform.parent.GetComponent<Button>().onClick.AddListener(OnRGBDClick);
@@ -193,8 +193,8 @@ public class LidarManager : MonoBehaviour
     {
         _lidarTopic = topic;
         lidarTopic.text = _lidarTopic;
-        lidarDrawer._enabled = true;
-        lidarDrawer.OnTopicChange(_lidarTopic);
+        lidarStreamer._enabled = true;
+        lidarStreamer.OnTopicChange(_lidarTopic);
         PlayerPrefs.SetString("lidarTopic", _lidarTopic);
         PlayerPrefs.Save();
     }
@@ -203,8 +203,8 @@ public class LidarManager : MonoBehaviour
     {
         _rgbdTopic = topic;
         rgbdTopic.text = _rgbdTopic;
-        rgbdDrawer._enabled = true;
-        rgbdDrawer.OnTopicChange(_rgbdTopic);
+        rgbdStreamer._enabled = true;
+        rgbdStreamer.OnTopicChange(_rgbdTopic);
         PlayerPrefs.SetString("rgbdTopic", _rgbdTopic);
         PlayerPrefs.Save();
     }
@@ -222,18 +222,18 @@ public class LidarManager : MonoBehaviour
 
     public void Clear()
     {
-        lidarDrawer.enabled = false;
-        rgbdDrawer.enabled = false;
+        lidarStreamer.enabled = false;
+        rgbdStreamer.enabled = false;
     }
 
     public void Lidar()
     {
-        lidarDrawer.ToggleEnabled();
+        lidarStreamer.ToggleEnabled();
     }
 
     public void RGBD()
     {
-        rgbdDrawer.ToggleEnabled();
+        rgbdStreamer.ToggleEnabled();
     }
 
     public void ToggleGridMap()
