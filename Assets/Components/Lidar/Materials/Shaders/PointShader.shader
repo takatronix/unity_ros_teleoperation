@@ -1,5 +1,14 @@
-Shader "Unlit/RGBD"
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Unlit/ROS/Point"
 {
+    Properties
+    {
+        _ColorMin ("Intensity min", Color) = (0, 0, 0, 0)
+        _ColorMax ("Intensity max", Color) = (1, 1, 1, 1)
+        [Toggle] _ColorIntensity ("Color by intensity", Float) = 0
+        [Toggle] _ColorRGB ("Color by RGB", Float) = 0
+    }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -8,10 +17,9 @@ Shader "Unlit/RGBD"
         Pass
         {
             CGPROGRAM
-// Upgrade NOTE: excluded shader from DX11, OpenGL ES 2.0 because it uses unsized arrays
-// #pragma exclude_renderers d3d11 gles
             #pragma vertex vert
             #pragma fragment frag
+            #pragma multi_compile_local COLOR_INTENSITY COLOR_RGB COLOR_Z
 
             #include "UnityCG.cginc"
             #include "Assets/Components/Lidar/Materials/Shaders/PointHelper.cginc"
@@ -26,10 +34,8 @@ Shader "Unlit/RGBD"
             struct lidardata
             {
                 float3 position;
-                int color;
+                float intensity;
             };
-
-            
 
             StructuredBuffer<float3> _Positions;
             StructuredBuffer<lidardata> _PointData;
@@ -40,8 +46,6 @@ Shader "Unlit/RGBD"
             uniform float4 _ColorMin;
             uniform float4 _ColorMax;
 
-
-
             v2f vert (uint vertexID: SV_VertexID, uint instanceID: SV_InstanceID)
             {
                 v2f o;
@@ -49,8 +53,18 @@ Shader "Unlit/RGBD"
                 float2 uv = _Positions[_BaseVertexIndex + vertexID] * _PointSize;
                 uv /= float2(_ScreenParams.x/_ScreenParams.y, 1);
                 float4 wpos = mul(_ObjectToWorld, float4(pos, 1.0f));
-                o.pos = mul(UNITY_MATRIX_VP, wpos) + float4(uv,0,0);
-                o.color = UnpackRGBA(_PointData[instanceID].color);
+
+                o.pos = UnityObjectToClipPos(wpos) + float4(uv,0,0);
+
+                #ifdef COLOR_INTENSITY
+                    o.color = lerp(_ColorMin, _ColorMax, _PointData[instanceID].intensity);
+                #elif defined(COLOR_RGB)
+                    o.color = UnpackRGBA(_PointData[instanceID].intensity);
+                #elif defined(COLOR_Z)
+                    o.color = lerp(_ColorMin, _ColorMax, (pos.z + 1.0f) * 0.5f);
+                #else
+                    o.color = float4(1, 0, 1, 1);
+                #endif
                 return o;
             }
 
