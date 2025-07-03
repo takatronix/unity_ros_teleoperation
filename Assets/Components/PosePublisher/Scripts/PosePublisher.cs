@@ -93,7 +93,7 @@ public class PosePublisher : MonoBehaviour
 
 
         ros.RegisterPublisher<PoseStampedMsg>(poseTopic);
-        ros.RegisterRosService<ActivateMissionRequest, ActivateMissionResponse>(missionTopic);
+        // ros.RegisterRosService<ActivateMissionRequest, ActivateMissionResponse>(missionTopic);
         // ros.RegisterRosService<TriggerRequest, TriggerResponse>(cancelTopic);
     }
 
