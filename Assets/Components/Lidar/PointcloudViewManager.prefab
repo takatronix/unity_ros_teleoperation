@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   name: Pointclouds
-  tag: default
+  tag: Points
   sensorPrefab: {fileID: 3800679703625452377, guid: 9aee66f4f676bb244b956bb4dff0fec4, type: 3}
   count: {fileID: 8708392369042287539}
   lidarStreamer: {fileID: 0}

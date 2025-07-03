@@ -251,7 +251,7 @@ MonoBehaviour:
   name: ImageView
   tag: Cameras
   sensorPrefab: {fileID: 7709393259870508619, guid: 2a50976a1f24dd8098ca2921520cdf15, type: 3}
-  Count: {fileID: 5928739823399356738}
+  count: {fileID: 5928739823399356738}
   trackingSprites:
   - {fileID: 3286163911610860551, guid: d60032fc7bdc8db91b454ee5c68f9105, type: 3}
   - {fileID: 3286163911610860551, guid: 0eebeed137c5a666e810befadd04c4b5, type: 3}

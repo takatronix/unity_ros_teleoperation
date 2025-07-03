@@ -9,11 +9,11 @@ using UnityEngine.UI;
 using UnityEditor;
 
 [CustomEditor(typeof(LidarManager))]
-public class LidarManagerEditor : Editor
+public class LidarManagerEditor : SensorManagerEditor
 {
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
+        base.OnInspectorGUI();
 
         LidarManager myScript = (LidarManager)target;
         // add text boxes for the topics

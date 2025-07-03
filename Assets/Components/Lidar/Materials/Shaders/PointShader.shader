@@ -58,6 +58,7 @@ Shader "Unlit/ROS/Point"
 
                 #ifdef COLOR_INTENSITY
                     o.color = lerp(_ColorMin, _ColorMax, _PointData[instanceID].intensity);
+
                 #elif defined(COLOR_RGB)
                     o.color = UnpackRGBA(_PointData[instanceID].intensity);
                 #elif defined(COLOR_Z)
