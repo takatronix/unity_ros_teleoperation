@@ -78,12 +78,6 @@ public class MarkerStream : SensorStream
         _namespaces = new Dictionary<string, GameObject>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     bool Validate(MarkerMsg msg)
     {
         if (msg.id == (int)MarkerType.Text_view_facing || msg.id == (int)MarkerType.Mesh_resource || msg.id == (int)MarkerType.Triangle_list)
@@ -120,8 +114,10 @@ public class MarkerStream : SensorStream
             return; // Skip further processing for delete actions
         }
 
+        string markerKey = $"{msg.ns}_{msg.id}";
+
         // else we want to add or modify the marker
-        if (!_namespaces.TryGetValue(msg.ns, out markerObject))
+        if (!_namespaces.TryGetValue(markerKey, out markerObject))
         {
             switch (msg.type)
             {
@@ -129,13 +125,16 @@ public class MarkerStream : SensorStream
                     markerObject = Instantiate(arrowPrefab);
                     break;
                 case (int)MarkerType.Cube:
-                    markerObject = Instantiate(cubePrefab);
+                    markerObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    markerObject.name = markerKey + "_Cube";
                     break;
                 case (int)MarkerType.Sphere:
-                    markerObject = Instantiate(spherePrefab);
+                    markerObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    markerObject.name = markerKey + "_Sphere";
                     break;
                 case (int)MarkerType.Cylinder:
-                    markerObject = Instantiate(cylinderPrefab);
+                    markerObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    markerObject.name = markerKey + "_Cylinder";
                     break;
                 case (int)MarkerType.Line_strip:
                     markerObject = Instantiate(lineStripPrefab);
@@ -151,13 +150,14 @@ public class MarkerStream : SensorStream
                     break;
                 case (int)MarkerType.Points:
                     markerObject = Instantiate(pointsPrefab);
+                    markerObject.name = markerKey + "_Points";
                     _updatePointSize += markerObject.GetComponent<MarkerPointStream>().OnSizeChange;
                     break;
                 default:
                     Debug.LogWarning($"Unsupported marker type: {markerTypeName}");
                     return; // Skip unsupported types
             }
-            markerObject.name = msg.ns;
+            // markerObject.name = msg.ns;
             // markerObject.transform.SetParent(msg.header.frame_id != "" ? GameObject.Find(msg.header.frame_id).transform : transform);
 
             if (msg.lifetime.sec > 0)
@@ -165,7 +165,7 @@ public class MarkerStream : SensorStream
                 Debug.Log($"Marker {msg.ns} will be destroyed after {msg.lifetime} seconds");
             }
 
-            _namespaces[msg.ns] = markerObject;
+            _namespaces[markerKey] = markerObject;
 
         }
 
