@@ -142,7 +142,7 @@ public class HeadsetPublisher : MonoBehaviour
             if (tfMsg.transforms[i].transform.rotation.From<FLU>().Equals(default))
                 tfMsg.transforms[i].transform.rotation.w = 1;
 
-        // headsetPoseMsg.pose.position = point.To<FLU>();
+        headsetPoseMsg.pose.position = headsetPose.action.ReadValue<Vector3>().To<FLU>();
         headsetPoseMsg.pose.orientation = quaternion;
         ros.Publish(poseTopic+"/headset", headsetPoseMsg);
 

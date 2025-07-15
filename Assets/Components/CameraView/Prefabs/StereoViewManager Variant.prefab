@@ -100,6 +100,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Stereo Views
       objectReference: {fileID: 0}
+    - target: {fileID: 8279031515717943549, guid: 4d017a92a686a1b49b37796f4382abcd, type: 3}
+      propertyPath: name
+      value: StereoView
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279031515717943549, guid: 4d017a92a686a1b49b37796f4382abcd, type: 3}
+      propertyPath: sensorPrefab
+      value: 
+      objectReference: {fileID: 8890415464594094642, guid: e9a52148caf70be4e85cf32e41cc89a8, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
