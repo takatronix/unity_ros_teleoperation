@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.Events;
 
+
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -139,9 +140,10 @@ public class PoseManager : MonoBehaviour
             _root = root;
         }
 
-        if(_fixedLocation)
+        if (_fixedLocation)
         {
-            BaseToLocation(_center);
+            // BaseToLocation(_center);
+            
         }
 
         if (action?.action.IsPressed() ?? false)
@@ -202,11 +204,19 @@ public class PoseManager : MonoBehaviour
         {
             _center = _robot.position;
             _forward = _robot.forward;
+            Camera.main.transform.SetParent(_robot);
         }
         else
         {
             _center = Vector3.zero;
             _forward = Vector3.zero;
+
+            Vector3 position = Camera.main.transform.position;
+            Quaternion rotation = Camera.main.transform.rotation;
+            Camera.main.transform.SetParent(null);
+            Camera.main.transform.position = position;
+            Camera.main.transform.rotation = Quaternion.Euler(0, rotation.eulerAngles.y, 0);
+
         }
     }
 
