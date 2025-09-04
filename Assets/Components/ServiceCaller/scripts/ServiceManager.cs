@@ -18,5 +18,4 @@ public class ServiceManagerEditor : SensorManagerEditor
 
 public class ServiceManager : SensorManager
 {
-    
 }

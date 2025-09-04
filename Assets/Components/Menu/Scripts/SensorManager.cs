@@ -85,6 +85,9 @@ public abstract class SensorManager : MonoBehaviour, IComparable<SensorManager>
             Deserialize(PlayerPrefs.GetString(name+"_layout"));
         }
 
+        // Register on quit in case disabled
+        Application.quitting += OnApplicationQuit;
+
         count.text = sensors.Count.ToString();
     }
 
@@ -116,20 +119,22 @@ public abstract class SensorManager : MonoBehaviour, IComparable<SensorManager>
     
     void OnApplicationQuit()
     {
+        Debug.Log("Saving layout for "+name);
         PlayerPrefs.SetString(name+"_layout", Serialize());
         PlayerPrefs.Save();
     }
 
     
     public string Serialize()
-    
     {
+        Debug.Log("Serializing SensorManager");
         SensorManagerData data = new SensorManagerData();
         data.data = new string[sensors.Count];
 
         for (int i = 0; i < sensors.Count; i++)
         {
             data.data[i] = sensors[i].GetComponent<SensorStream>().Serialize();
+            Debug.Log("Serialized sensor: " + data.data[i]);
         }
 
 

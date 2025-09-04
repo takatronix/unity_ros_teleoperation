@@ -249,9 +249,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8d2f49a570f8e74796e187ad1b85cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: DEFAULT
+  name: Audio
+  tag: Cameras
   sensorPrefab: {fileID: 0}
-  Count: {fileID: 0}
+  count: {fileID: 0}
   untracked: {fileID: 0}
   tracked: {fileID: 0}
   micPrefab: {fileID: 7778138420505681963, guid: 3b084bfd7e7795441babde932c4a859f, type: 3}

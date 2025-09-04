@@ -9,6 +9,7 @@ TagManager:
   - hand
   - floor
   - tf
+  - menu
   layers:
   - Default
   - TransparentFX

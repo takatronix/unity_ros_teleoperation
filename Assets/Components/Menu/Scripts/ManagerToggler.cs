@@ -103,6 +103,7 @@ public class ManagerToggler : MonoBehaviour
     public void OnButtonClick(SensorManager manager, Image buttonImage)
     {
         bool isActive = manager.gameObject.activeSelf;
+        manager.ClearAll();
         manager.gameObject.SetActive(!isActive);
         buttonImage.sprite = isActive ? inactiveSprite : activeSprite;
 

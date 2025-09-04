@@ -52,7 +52,7 @@ public class MenuTemplate : MonoBehaviour
 
         GameObject header = null;
 
-        if(tagFilter != "")
+        if (tagFilter != "")
         {
             Debug.Log("Grouping: " + tagFilter);
             header = Instantiate(headerPrefab, menu.transform);
@@ -62,12 +62,18 @@ public class MenuTemplate : MonoBehaviour
 
         managers = FindObjectsOfType<SensorManager>();
         System.Array.Sort(managers);
-        System.Array.Reverse(managers); 
+        System.Array.Reverse(managers);
 
         float offset = 0;
         foreach (SensorManager manager in managers)
         {
             string tag = manager.tag;
+
+            if (tagFilter != "" && tag != tagFilter)
+            {
+                continue;
+            }
+
             if (!groups.ContainsKey(tag))
             {
                 groups.Add(tag, 1);
@@ -77,10 +83,6 @@ public class MenuTemplate : MonoBehaviour
                 groups[tag]++;
             }
 
-            if (tagFilter != "" && tag != tagFilter)
-            {
-                continue;
-            }
 
             // Make a child of this object's rect transform
             manager.transform.SetParent(menu.transform);
@@ -123,7 +125,7 @@ public class MenuTemplate : MonoBehaviour
             if (child.GetComponent<SensorManager>() != null)
             {
                 child.transform.localPosition = Vector3.zero;
-                child.transform.localRotation = Quaternion.identity;
+                child.transform.localRotation = Quaternion.Euler(0, 90, 0);
                 child.transform.localScale = Vector3.one;
             }
             else

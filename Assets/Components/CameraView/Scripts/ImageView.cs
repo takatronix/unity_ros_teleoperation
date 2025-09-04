@@ -222,11 +222,6 @@ public class ImageView : SensorStream
         dropdown.value = Mathf.Min(_lastSelected, options.Count - 1);
     }
 
-    public void Clear()
-    {
-        manager.Remove(gameObject);
-    }
-
     public override void ToggleTrack(int newState)
     {
         _trackingState = newState;
@@ -252,9 +247,6 @@ public class ImageView : SensorStream
             transform.parent = Camera.main.transform;
             _frustrum?.SetActive(false);
         }
-
-
-
 
     }
 

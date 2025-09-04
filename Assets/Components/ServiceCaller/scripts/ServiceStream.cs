@@ -27,11 +27,16 @@ public class ServiceStreamEditor : SensorStreamEditor
 }
 #endif
 
+[System.Serializable]
+public class ServiceData: ISensorData
+{
+}
+
 public class ServiceStream : SensorStream
 {
     public string topic = "/service_name";
     public TextMeshProUGUI topicText;
-    public TMPro.TMP_Text topicInputField;
+    public TMPro.TMP_InputField topicInputField;
     private ROSConnection _ros;
 
 
@@ -54,35 +59,60 @@ public class ServiceStream : SensorStream
 
     public void SubscribeToService()
     {
+        topic = topicInputField.text;
+        topicText.text = topic;
         Debug.Log($"Subscribing to service: {topic}");
-        _ros.RegisterRosService<TriggerRequest, TriggerResponse>(topic);
+        _ros.RegisterRosService<EmptyRequest, EmptyResponse>(topic);
+    }
+
+    void OnApplicationQuit()
+    {
+      Debug.Log("Unregistering service: " + topic);  
     }
 
     public void TriggerService()
     {
         Debug.Log($"Triggering service: {topic}");
-        _ros.SendServiceMessage<TriggerResponse>(topic, new TriggerRequest(), ServiceCallback);
+        _ros.SendServiceMessage<EmptyResponse>(topic, new EmptyRequest(), ServiceCallback);
     }
 
-    private void ServiceCallback(TriggerResponse response)
+    private void ServiceCallback(EmptyResponse response)
     {
         Debug.Log($"Service response received: {response}");
     }
 
     public override string Serialize()
     {
-        // Add your serialization logic here
         Debug.Log("Serializing ServiceStream");
-        return "{}"; // Example return value
+        ServiceData data = new ServiceData();
+        data.position = transform.localPosition;
+        data.rotation = transform.localRotation;
+        data.scale = transform.localScale;
+        data.topicName = topic;
+        return JsonUtility.ToJson(data);
     }
 
-    // Implementation of abstract method Deserialize
     public override void Deserialize(string data)
     {
-        // Add your deserialization logic here
-        Debug.Log($"Deserializing ServiceStream with data: {data}");
+        try
+        {
+            Debug.Log("Deserializing ServiceStream");
+            ServiceData sensorData = JsonUtility.FromJson<ServiceData>(data);
+            transform.localPosition = sensorData.position;
+            transform.localRotation = sensorData.rotation;
+            transform.localScale = sensorData.scale;
+            topic = sensorData.topicName;
+            topicText.text = topic;
+            topicInputField.text = topic;
+
+            SubscribeToService();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to deserialize ServiceStream data: {e.Message}");
+        }
     }
-    
+
     public override void ToggleTrack(int trackId)
     {
         // Add your logic here
