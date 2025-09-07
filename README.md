@@ -1,6 +1,11 @@
 
 # Unity ROS Teleoperation Project
-[Project Page](https://rffr.leggedrobotics.com/works/xr/)
+[![Unity 2022.3.12f1](https://img.shields.io/badge/Unity-2022.3.12f1-blue?logo=unity)](https://unity.com/releases/editor/whats-new/2022.3.12f1)
+[![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-green)]()
+[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Platform: Linux x64](https://img.shields.io/badge/platform-Linux%20x64-lightgrey?logo=linux)]()
+[![Platform: Quest 3](https://img.shields.io/badge/platform-Quest%203-blueviolet?logo=oculus)]()
+[![Project Page](https://img.shields.io/badge/Project%20Page-rffr.leggedrobotics.com-blue?logo=internet)](https://rffr.leggedrobotics.com/works/xr/)
 
 This repo contains a series of components for Unity XR teleoperation with ROS integration. It is designed to be run on a Quest 3 VR headset, and support OpenXR, hand tracking, Unity input system, and is built with Unity 2022.3.12f1.
 
