@@ -20,10 +20,22 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: StereoStreamer, Assembly-CSharp
       objectReference: {fileID: 0}
+    - target: {fileID: 2406882672257423557, guid: 2a50976a1f24dd8098ca2921520cdf15, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2645893342989272051, guid: 2a50976a1f24dd8098ca2921520cdf15, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 78685895570833187}
+    - target: {fileID: 3303167026125507273, guid: 2a50976a1f24dd8098ca2921520cdf15, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3303167026125507273, guid: 2a50976a1f24dd8098ca2921520cdf15, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ae13b1e0136c4a26f89ca873c89e8bb1, type: 2}
     - target: {fileID: 4244529357589432071, guid: 2a50976a1f24dd8098ca2921520cdf15, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -114,7 +126,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4784887247087540269, guid: 2a50976a1f24dd8098ca2921520cdf15, type: 3}
       propertyPath: m_PresetInfoIsWorld
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5106567488347881522, guid: 2a50976a1f24dd8098ca2921520cdf15, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

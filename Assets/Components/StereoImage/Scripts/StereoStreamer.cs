@@ -40,7 +40,7 @@ public class StereoStreamer : ImageView
             if (topic.Value == "sensor_msgs/Image" || topic.Value == "sensor_msgs/CompressedImage")
             {
                 // issue with depth images at the moment
-                if (topic.Key.Contains("left"))
+                if (topic.Key.ToLowerInvariant().Contains("left"))
                     options.Add(topic.Key);
             }
         }
@@ -53,6 +53,7 @@ public class StereoStreamer : ImageView
         topicDropdown.ClearOptions();
         topicDropdown.AddOptions(options);
         topicDropdown.value = Mathf.Min(_lastSelected, options.Count - 1);
+
     }
 
     /// <summary>
@@ -88,7 +89,7 @@ public class StereoStreamer : ImageView
     {
         nameText.text = topic;
 
-        if (topic == null)
+        if (string.IsNullOrEmpty(topic))
         {
             topicName = null;
             // set texture to grey
@@ -102,6 +103,8 @@ public class StereoStreamer : ImageView
             topMenu.SetActive(false);
             return;
         }
+
+        topicName = topic;
 
         if (topicName.EndsWith("compressed"))
         {
