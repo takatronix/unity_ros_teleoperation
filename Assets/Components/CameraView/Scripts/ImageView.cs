@@ -375,7 +375,6 @@ public class ImageView : SensorStream
 
     void OnCompressed(CompressedImageMsg msg)
     {
-        // SetupTex();
         ParseHeader(msg.header);
 
         try
@@ -416,14 +415,121 @@ public class ImageView : SensorStream
 
         try
         {
-            // _texture2D.LoadRawTextureData(msg.data);
-            // _texture2D.Apply();
+            Texture2D temp = new Texture2D((int)msg.width, (int)msg.height, GetTextureFormat(msg.encoding), false);
+            temp.LoadRawTextureData(msg.data);
+            temp.Apply();
+            RenderTexture.active = _texture2D;
+            Graphics.Blit(temp, _texture2D);
+            RenderTexture.active = null;
+            Destroy(temp);
+
+
         }
         catch (System.Exception e)
         {
             Debug.LogError(e);
         }
         Resize();
+    }
+
+    public static TextureFormat GetTextureFormat(string rosEncoding)
+    {
+        switch (rosEncoding.ToLowerInvariant())
+        {
+            // 8-bit color
+            case "rgb8":
+                return TextureFormat.RGB24;
+            case "bgr8":
+                // channel order can be swapped later if needed
+                return TextureFormat.RGB24;
+            case "rgba8":
+                return TextureFormat.RGBA32;
+            case "bgra8":
+                return TextureFormat.RGBA32;
+
+            // 16-bit color (map to 16-bit-per-channel RGBA when available)
+            case "rgb16":
+            case "bgr16":
+            case "rgba16":
+            case "bgra16":
+                // Use RGBA64 (16 bits per channel) when available; preserves bit depth.
+                return TextureFormat.RGBA64;
+
+            // Monochrome
+            case "mono8":
+            case "8uc1":
+                return TextureFormat.R8;
+            case "mono16":
+            case "16uc1":
+                return TextureFormat.R16;
+
+            // OpenCV-like 8-bit types
+            case "8uc2":
+                // two channels -> use RG16 (two 8-bit channels packed) as best fit
+                return TextureFormat.RG16;
+            case "8uc3":
+                return TextureFormat.RGB24;
+            case "8uc4":
+                return TextureFormat.RGBA32;
+
+            // Signed/other 8-bit types - map to nearest Unity format
+            case "8sc1":
+                return TextureFormat.R8;
+            case "8sc2":
+                return TextureFormat.RG16;
+            case "8sc3":
+                return TextureFormat.RGB24;
+            case "8sc4":
+                return TextureFormat.RGBA32;
+
+            // 16-bit OpenCV types
+            case "16uc2":
+            case "16sc2":
+                return TextureFormat.RG16;
+            case "16uc3":
+            case "16sc3":
+                return TextureFormat.RGBA64; // map 3-channel 16-bit to 4-channel 16-bit container
+            case "16uc4":
+            case "16sc4":
+                return TextureFormat.RGBA64;
+
+            // 32-bit integer/float types -> use float formats
+            case "32sc1":
+            case "32sc2":
+            case "32sc3":
+            case "32sc4":
+                return TextureFormat.RGBAFloat;
+            case "32fc1":
+            case "32fc2":
+            case "32fc3":
+            case "32fc4":
+                return TextureFormat.RGBAFloat;
+
+            // 64-bit float -> map to float texture (precision loss but usable)
+            case "64fc1":
+            case "64fc2":
+            case "64fc3":
+            case "64fc4":
+                return TextureFormat.RGBAFloat;
+
+            // Bayer patterns
+            case "bayer_rggb8":
+            case "bayer_bggr8":
+            case "bayer_gbrg8":
+            case "bayer_grbg8":
+                // raw 8-bit sensor data
+                return TextureFormat.R8;
+            case "bayer_rggb16":
+            case "bayer_bggr16":
+            case "bayer_gbrg16":
+            case "bayer_grbg16":
+                // raw 16-bit sensor data
+                return TextureFormat.R16;
+
+            default:
+                // Fallback to a safe, widely supported format
+                return TextureFormat.RGBA32;
+        }
     }
 
     public override void Deserialize(string data)

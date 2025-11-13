@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using RosMessageTypes.Std;
 using RosMessageTypes.Sensor;
 using Unity.Robotics.ROSTCPConnector;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.Experimental.Rendering;
 
 
 #if UNITY_EDITOR
@@ -38,7 +40,7 @@ public class StereoStreamer : ImageView
             if (topic.Value == "sensor_msgs/Image" || topic.Value == "sensor_msgs/CompressedImage")
             {
                 // issue with depth images at the moment
-                if (topic.Key.Contains("left"))
+                if (topic.Key.ToLowerInvariant().Contains("left"))
                     options.Add(topic.Key);
             }
         }
@@ -51,6 +53,7 @@ public class StereoStreamer : ImageView
         topicDropdown.ClearOptions();
         topicDropdown.AddOptions(options);
         topicDropdown.value = Mathf.Min(_lastSelected, options.Count - 1);
+
     }
 
     /// <summary>
@@ -86,7 +89,7 @@ public class StereoStreamer : ImageView
     {
         nameText.text = topic;
 
-        if (topic == null)
+        if (string.IsNullOrEmpty(topic))
         {
             topicName = null;
             // set texture to grey
