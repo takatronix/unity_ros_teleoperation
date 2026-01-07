@@ -138,6 +138,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   bundleVersion: 0.1.0
   preloadedAssets:
+  - {fileID: 11400000, guid: 4af2ebe7f3a1446f3a901eab871cc2e4, type: 2}
   - {fileID: 3693302877158471611, guid: be0e8438bce994bf9b3025d014d3b0dd, type: 2}
   - {fileID: 11400000, guid: 9502fd768ba2eebf9a447f1eb9e39f11, type: 2}
   - {fileID: 6469690687408927624, guid: a6e398ced169c408eae2b57d4d7acb84, type: 2}
@@ -785,8 +786,8 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: USE_INPUT_SYSTEM_POSE_CONTROL;ROS2
-    Standalone: USE_INPUT_SYSTEM_POSE_CONTROL;ROS2
+    Android: USE_INPUT_SYSTEM_POSE_CONTROL;ROS2;ISDK_OPENXR_HAND
+    Standalone: USE_INPUT_SYSTEM_POSE_CONTROL;ROS2;ISDK_OPENXR_HAND
     Windows Store Apps: USE_INPUT_SYSTEM_POSE_CONTROL;ROS2
   additionalCompilerArguments: {}
   platformArchitecture: {}

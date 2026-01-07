@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Hands;
 using Unity.Robotics.ROSTCPConnector;
+using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 using RosMessageTypes.Std;
 using RosMessageTypes.Geometry;
 using RosMessageTypes.Sensor;
@@ -57,9 +58,17 @@ public class HandPub : MonoBehaviour
     private bool _publishing = false;
 
     private bool _highConfidence = false;
+
+    // Topics for dual arm control
+    private const string _leftHandPoseTopic = "/quest/left_hand/pose";
+    private const string _rightHandPoseTopic = "/quest/right_hand/pose";
+    private const string _leftHandJointsTopic = "/quest/left_hand/joints";
+    private const string _rightHandJointsTopic = "/quest/right_hand/joints";
+    private const string _gestureTopic = "/quest/hand_gesture";
+
+    // Legacy topics (kept for compatibility)
     private const string _landmarksTopic = "/quest/hand_pose";
     private const string _pointCloudTopic = "/quest/hand_points";
-    private const string _gestureTopic = "/quest/hand_gesture";
 
     public string worldFrame = "quest_origin";
 
@@ -107,9 +116,17 @@ public class HandPub : MonoBehaviour
             
         }
         _ros = ROSConnection.GetOrCreateInstance();
+
+        // Register publishers for dual arm control
+        _ros.RegisterPublisher<PoseStampedMsg>(_leftHandPoseTopic);
+        _ros.RegisterPublisher<PoseStampedMsg>(_rightHandPoseTopic);
+        _ros.RegisterPublisher<PointCloudMsg>(_leftHandJointsTopic);
+        _ros.RegisterPublisher<PointCloudMsg>(_rightHandJointsTopic);
+        _ros.RegisterPublisher<HandGestureMsg>(_gestureTopic);
+
+        // Legacy publishers (kept for compatibility)
         _ros.RegisterPublisher<ManoLandmarksMsg>(_landmarksTopic);
         _ros.RegisterPublisher<PointCloudMsg>(_pointCloudTopic);
-        _ros.RegisterPublisher<HandGestureMsg>(_gestureTopic);
 
         // setup action map listeners
         twistController.action.performed += _ => PubTwistController();
@@ -168,17 +185,93 @@ public class HandPub : MonoBehaviour
         _img.sprite = _publishing ? enableIcon : disableIcon;
     }
 
-    void OnHandUpdate(XRHandSubsystem subsystem, 
+    void OnHandUpdate(XRHandSubsystem subsystem,
         XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags,
         XRHandSubsystem.UpdateType updateType)
     {
         if(!_publishing) return;
         if (updateSuccessFlags == 0 && _highConfidence) return;
-        
 
         // bypass render update to slightly throttle
         if(updateType != XRHandSubsystem.UpdateType.Dynamic) return;
-        
+
+        // Process both hands for dual arm control
+        ProcessHand(subsystem.leftHand, _leftHandPoseTopic, _leftHandJointsTopic, "left");
+        ProcessHand(subsystem.rightHand, _rightHandPoseTopic, _rightHandJointsTopic, "right");
+
+        // Legacy: publish right hand data to old topics for compatibility
+        if(subsystem.rightHand.isTracked)
+        {
+            PublishLegacyHandData(subsystem.rightHand);
+        }
+    }
+
+    void ProcessHand(XRHand hand, string poseTopic, string jointsTopic, string handName)
+    {
+        if(!hand.isTracked) return;
+
+        HeaderMsg header = new HeaderMsg();
+        header.frame_id = worldFrame;
+
+        // Publish wrist pose (for IK target)
+        var wristJoint = hand.GetJoint(XRHandJointID.Wrist);
+        if(wristJoint.TryGetPose(out Pose wristPose))
+        {
+            PoseStampedMsg poseMsg = new PoseStampedMsg();
+            poseMsg.header = header;
+
+            // Transform to root frame and convert to ROS FLU coordinate system
+            Vector3 localPos = _root.transform.InverseTransformPoint(wristPose.position);
+            Quaternion localRot = Quaternion.Inverse(_root.rotation) * wristPose.rotation;
+
+            poseMsg.pose.position = localPos.To<FLU>();
+            poseMsg.pose.orientation = localRot.To<FLU>();
+
+            _ros.Publish(poseTopic, poseMsg);
+        }
+
+        // Publish all joint positions
+        PointCloudMsg jointCloud = new PointCloudMsg();
+        jointCloud.header = header;
+        ChannelFloat32Msg[] channels = new ChannelFloat32Msg[1];
+        channels[0] = new ChannelFloat32Msg();
+        channels[0].name = "confidence";
+        channels[0].values = new float[jointMap.Count];
+        Point32Msg[] points = new Point32Msg[jointMap.Count];
+
+        foreach (int i in jointMap.Keys)
+        {
+            var jointID = jointMap[i];
+            var trackingData = hand.GetJoint(jointID);
+
+            if(trackingData.TryGetPose(out Pose pose))
+            {
+                points[i] = new Point32Msg();
+
+                // Transform to root frame and convert to ROS FLU coordinate system
+                Vector3 localPos = _root.transform.InverseTransformPoint(pose.position);
+                Vector3Msg rosPos = localPos.To<FLU>();
+
+                points[i].x = (float)rosPos.x;
+                points[i].y = (float)rosPos.y;
+                points[i].z = (float)rosPos.z;
+                channels[0].values[i] = 1.0f;
+            }
+            else
+            {
+                points[i] = new Point32Msg();
+                channels[0].values[i] = 0.0f;
+            }
+        }
+
+        jointCloud.points = points;
+        jointCloud.channels = channels;
+        _ros.Publish(jointsTopic, jointCloud);
+    }
+
+    void PublishLegacyHandData(XRHand hand)
+    {
+        // Legacy format for backward compatibility
         ManoLandmarksMsg msg = new ManoLandmarksMsg();
         PointCloudMsg pointCloudMsg = new PointCloudMsg();
         HeaderMsg header = new HeaderMsg();
@@ -191,62 +284,34 @@ public class HandPub : MonoBehaviour
         channels[0].values = new float[jointMap.Count];
         Point32Msg[] points = new Point32Msg[jointMap.Count];
 
-        XRHand hand = subsystem.rightHand;
-        if(hand.isTracked)
+        foreach (int i in jointMap.Keys)
         {
-            string mode = "";
-            if(subsystem.leftHand.isTracked)
+            var jointID = jointMap[i];
+            var trackingData = hand.GetJoint(jointID);
+
+            if(trackingData.TryGetPose(out Pose pose))
             {
-                mode = "Both";
-            } else {
-                mode = "Right";
+                points[i] = new Point32Msg();
+                Vector3 localPos = _root.transform.InverseTransformPoint(pose.position);
+                Vector3Msg rosPos = localPos.To<FLU>();
+
+                points[i].x = (float)rosPos.x;
+                points[i].y = (float)rosPos.y;
+                points[i].z = (float)rosPos.z;
+                channels[0].values[i] = 1;
             }
-            // if(modeText != null)
-            // infoText?.SetText(mode + " " + (updateSuccessFlags == 0 ? "Low" : "High"));
-            
-            int count =0;
-            foreach (int i in jointMap.Keys)
+            else
             {
-                var jointID = jointMap[i];
-                if(jointID == XRHandJointID.EndMarker)
-                    Debug.LogWarning("end joint....?" + i + " " + jointID);
-    
-                var trackingData = hand.GetJoint(jointID);
-                if(trackingData == null)
-                {
-                    Debug.LogError("Null tracking data!" + jointID);
-                    continue;
-                }
-                if(trackingData.TryGetPose(out Pose pose))
-                {
-                    if(points[i] == null)
-                        points[i] = new Point32Msg();
-
-                    // Transform poses relative to the pose manager's root
-                    
-                    pose.position = _root.transform.InverseTransformPoint(pose.position);
-
-
-                    points[i].x = pose.position.x;
-                    points[i].y = pose.position.z;
-                    points[i].z = pose.position.y;
-                    channels[0].values[i] = 1;
-
-                    count++;
-                } else {
-                    Debug.LogError("Failed to get pose for joint " + jointID + " " + i);
-                    channels[0].values[i] = 0;
-                }
+                points[i] = new Point32Msg();
+                channels[0].values[i] = 0;
             }
+        }
 
-            // if(jointsText != null)
-            //     jointsText.SetText("Joints: "+count);
-
-            pointCloudMsg.points = points;
-            msg.landmarks = CastPoints(points);
-            _ros.Publish(_landmarksTopic, msg);
-            _ros.Publish(_pointCloudTopic, pointCloudMsg);
-        } 
+        pointCloudMsg.points = points;
+        pointCloudMsg.channels = channels;
+        msg.landmarks = CastPoints(points);
+        _ros.Publish(_landmarksTopic, msg);
+        _ros.Publish(_pointCloudTopic, pointCloudMsg);
     }
 
     public static PointMsg[] CastPoints(Point32Msg[] points)

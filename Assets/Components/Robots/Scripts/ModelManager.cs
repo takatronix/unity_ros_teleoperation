@@ -57,10 +57,13 @@ public class ModelManager : MonoBehaviour
     private Image _toggleImage;
 
     private void Awake()
-    {        
+    {
         instance = this;
 
         _root = GameObject.FindWithTag("root");
+
+        // Reset PlayerPrefs on first run after update (remove this line after first build)
+        PlayerPrefs.DeleteKey("startRobotIndex");
 
         startRobotIndex = PlayerPrefs.GetInt("startRobotIndex", startRobotIndex);
         string startRootFrame = PlayerPrefs.GetString("rootFrame", "odom");

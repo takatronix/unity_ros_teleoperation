@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/oldNerf.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Main.unity
+    guid: 10fc7d2cde719dc5dab5ea8a37b46803
   - enabled: 0
     path: Assets/Components/Hands/HandTester.unity
     guid: b2f4b25e61a8e1f4c894726eb0d70f10
@@ -39,9 +42,6 @@ EditorBuildSettings:
     path: Assets/Components/VRStreamer/VRStreamerTester.unity
     guid: 9fd76377db89753458ba399dd20b39f3
   - enabled: 0
-    path: Assets/Scenes/Main.unity
-    guid: 10fc7d2cde719dc5dab5ea8a37b46803
-  - enabled: 0
     path: Assets/Components/TactileImages/TactileImagesTestScene.unity
     guid: c0c9f40045a04148a9c0732148a582ce
   - enabled: 0
@@ -50,11 +50,11 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Components/Markers/MarkerTestScene.unity
     guid: a9855399fbef08b8da16de5060552268
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/2dMain.unity
     guid: 039100e8610c757c1b3c0aa9431c16eb
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: d692ced636ecadb9a99ecb6e0247e7b6, type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 9502fd768ba2eebf9a447f1eb9e39f11, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: be0e8438bce994bf9b3025d014d3b0dd, type: 2}
-    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: c0c3e31970d4d9d008092693dfcd9ac5, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: a6e398ced169c408eae2b57d4d7acb84, type: 2}

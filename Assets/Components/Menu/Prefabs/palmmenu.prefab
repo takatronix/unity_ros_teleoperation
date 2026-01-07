@@ -991,7 +991,7 @@ MonoBehaviour:
     modelRoot: {fileID: 5246889467303309071, guid: 8dfb0d1b19bc5da4481922089682e6d4, type: 3}
     RobotSprite: {fileID: 0}
     rootFrame: world
-  startRobotIndex: 3
+  startRobotIndex: 0
   currentRobot:
     name: 
     modelRoot: {fileID: 0}

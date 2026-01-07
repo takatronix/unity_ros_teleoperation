@@ -16,5 +16,7 @@ MonoBehaviour:
   Values:
   - featureSets:
     - com.unity.openxr.featureset.meta
+    - com.meta.openxr.featureset.metaxr
   - featureSets:
     - com.unity.openxr.featureset.meta
+    - com.meta.openxr.featureset.metaxr
