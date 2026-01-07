@@ -1,0 +1,51 @@
+Unity Editor version:    2022.3.12f1 (4fe6e059c7ef)
+Branch:                  2022.3/release
+Build type:              Release
+Batch mode:              YES
+macOS version:           Version 26.2 (Build 25C56)
+Darwin version:          25.2.0
+Architecture:            arm64
+Running under Rosetta:   NO
+Available memory:        262144 MB
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Successfully connected to the License Client on channel: "LicenseClient-takatronix" at "2026-01-07T17:48:28.140384Z"
+[Licensing::Client] Error: Code 10 while verifying Licensing Client signature (process Id: 1560, path: "/Applications/Unity Hub.app/Contents/Frameworks/UnityLicensingClient_V1.app/Contents/MacOS/Unity.Licensing.Client")
+[Licensing::Module] Error: LicensingClient has failed validation; ignoring
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.17.4+4293ba1
+  Session Id:              75399f6323204185b6bcbaa544ae3f5f
+  Correlation Id:          f099d9a35c721f46afca3605f766d593
+  External correlation Id: 7971499570132913807
+  Machine Id:              /JB7Y8k5eI+Yqsi0wTIh7DPwDhI=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-takatronix" (connect: 0.00s, validation: 0.01s, handshake: 0.29s)
+[Licensing::IpcConnector] Successfully connected to the License Notification on channel: "LicenseClient-takatronix-notifications" at "2026-01-07T17:48:28.437908Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully updated license
+[Licensing::Client] Successfully resolved entitlements
+[Licensing::Module] Serial number assigned to: "1881840-UnityPersXXXX"
+Pro License: NO
+Launching external process: /Applications/Unity/Hub/Editor/2022.3.12f1/Unity.app/Contents/Resources/PackageManager/Server/UnityPackageManager
+
+COMMAND LINE ARGUMENTS:
+/Applications/Unity/Hub/Editor/2022.3.12f1/Unity.app/Contents/MacOS/Unity
+-batchmode
+-quit
+-projectPath
+/Users/takatronix/projects/unity_ros_teleoperation
+-executeMethod
+CommandLineBuild.BuildAndroid
+-logFile
+/Users/takatronix/projects/unity_ros_teleoperation/build.log
+Successfully changed project path to: /Users/takatronix/projects/unity_ros_teleoperation
+/Users/takatronix/projects/unity_ros_teleoperation
+別のUnityが起動中で、このプロジェクトを開いているようです。
+
+複数のUnityを起動して同じプロジェクトを開くことはできません。
+
+プロジェクト: /Users/takatronix/projects/unity_ros_teleoperation
+Fatal Error! 別のUnityが起動中で、このプロジェクトを開いているようです。
+
+複数のUnityを起動して同じプロジェクトを開くことはできません。
+
+プロジェクト: /Users/takatronix/projects/unity_ros_teleoperation
+[Package Manager] Server::Kill -- Server was shutdown
