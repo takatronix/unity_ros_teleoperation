@@ -393,21 +393,12 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.meta-openxr": {
-      "version": "1.0.0",
+      "version": "1.0.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.xr.openxr": "1.7.0",
-        "com.unity.xr.arfoundation": "5.1.0-pre.6"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.xr.oculus": {
-      "version": "4.1.2",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.xr.management": "4.4.0"
+        "com.unity.xr.arfoundation": "5.1.0"
       },
       "url": "https://packages.unity.com"
     },
