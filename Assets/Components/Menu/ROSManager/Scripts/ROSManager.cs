@@ -20,7 +20,7 @@ public class ROSManager : MonoBehaviour
     public Dropdown ipDropdown;
 
     private List<string> _ips;
-    public string defaultIP = "10.42.0.1";
+    public string defaultIP = "192.168.1.49";
     public string defaultPort = "10000";
 
     public GameObject ipSetting;
@@ -49,6 +49,7 @@ public class ROSManager : MonoBehaviour
             _ips.Add(ip);
         }
 
+        // PlayerPrefsからIPを読み込む、なければdefaultIPを使用
         if(PlayerPrefs.HasKey("ip"))
         {
             _ip = PlayerPrefs.GetString("ip");
@@ -88,7 +89,9 @@ public class ROSManager : MonoBehaviour
         _ros.RosPort = _port;
         _ros.RosIPAddress = _ip;
 
+        Debug.Log($"[ROSManager] Connecting to {_ip}:{_port}");
         _ros.Connect();
+        Debug.Log($"[ROSManager] Connect() called, HasConnectionError={_ros.HasConnectionError}");
 
         _ipText.text = _ip;
         _portText.text = _port.ToString();
@@ -136,6 +139,7 @@ public class ROSManager : MonoBehaviour
         if(_connected != !_ros.HasConnectionError)
         {
             _connected = !_ros.HasConnectionError;
+            Debug.Log($"[ROSManager] Connection state changed: connected={_connected}");
             OnConnectionColor.Invoke(_connected);
         }
         if(_stagnant != _ros.LastMessageReceivedRealtime - Time.time < 2.5)

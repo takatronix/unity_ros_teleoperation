@@ -10631,7 +10631,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   ipDropdown: {fileID: 4778923178812294728}
-  defaultIP: localhost
+  defaultIP: 192.168.1.49
   defaultPort: 10000
   ipSetting: {fileID: 4633833237985769288}
   portSetting: {fileID: 3546049802114300441}
