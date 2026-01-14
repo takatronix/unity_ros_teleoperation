@@ -55,7 +55,7 @@ public class HandPub : MonoBehaviour
     XRHandSubsystem m_handSubsystem;
 
     private Transform _root;
-    private bool _publishing = false;
+    private bool _publishing = true; // Default ON for debugging
 
     private bool _highConfidence = false;
 
@@ -74,7 +74,16 @@ public class HandPub : MonoBehaviour
 
     void Start()
     {
-        _root = GameObject.FindWithTag("root").transform;
+        var rootObj = GameObject.FindWithTag("root");
+        if(rootObj != null)
+        {
+            _root = rootObj.transform;
+            Debug.Log("[HandPub] Found root: " + _root.name);
+        }
+        else
+        {
+            Debug.LogError("[HandPub] Could not find GameObject with tag 'root'!");
+        }
 
         _img = enableButton.transform.Find("Image/Image").GetComponent<Image>();
 
@@ -83,6 +92,7 @@ public class HandPub : MonoBehaviour
             _publishing = PlayerPrefs.GetInt("handPublishing") == 1;
             _img.sprite = _publishing ? enableIcon : disableIcon;
         }
+        Debug.Log("[HandPub] Start - _publishing=" + _publishing);
 
         var _handSubsystem = new List<XRHandSubsystem>();
         SubsystemManager.GetSubsystems(_handSubsystem);
@@ -183,8 +193,10 @@ public class HandPub : MonoBehaviour
         PlayerPrefs.SetInt("handPublishing", _publishing ? 1 : 0);
         PlayerPrefs.Save();
         _img.sprite = _publishing ? enableIcon : disableIcon;
+        Debug.Log("[HandPub] TogglePublishing - _publishing=" + _publishing);
     }
 
+    private bool _handLoggedOnce = false;
     void OnHandUpdate(XRHandSubsystem subsystem,
         XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags,
         XRHandSubsystem.UpdateType updateType)
@@ -194,6 +206,12 @@ public class HandPub : MonoBehaviour
 
         // bypass render update to slightly throttle
         if(updateType != XRHandSubsystem.UpdateType.Dynamic) return;
+
+        if(!_handLoggedOnce)
+        {
+            Debug.Log("[HandPub] OnHandUpdate - sending hand data, leftTracked=" + subsystem.leftHand.isTracked + ", rightTracked=" + subsystem.rightHand.isTracked);
+            _handLoggedOnce = true;
+        }
 
         // Process both hands for dual arm control
         ProcessHand(subsystem.leftHand, _leftHandPoseTopic, _leftHandJointsTopic, "left");
@@ -209,6 +227,13 @@ public class HandPub : MonoBehaviour
     void ProcessHand(XRHand hand, string poseTopic, string jointsTopic, string handName)
     {
         if(!hand.isTracked) return;
+        if(_root == null)
+        {
+            Debug.LogError("[HandPub] _root is null! Looking for 'root' tag...");
+            var rootObj = GameObject.FindWithTag("root");
+            if(rootObj != null) _root = rootObj.transform;
+            else return;
+        }
 
         HeaderMsg header = new HeaderMsg();
         header.frame_id = worldFrame;

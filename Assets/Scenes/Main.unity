@@ -291,6 +291,22 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 33.38
       objectReference: {fileID: 0}
+    - target: {fileID: 7194512740443469361, guid: 284c18ecc4f72ec20968371b116bf40b, type: 3}
+      propertyPath: leftControllerPosition
+      value: 
+      objectReference: {fileID: -2024308242397127297, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    - target: {fileID: 7194512740443469361, guid: 284c18ecc4f72ec20968371b116bf40b, type: 3}
+      propertyPath: leftControllerRotation
+      value: 
+      objectReference: {fileID: 8248158260566104461, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    - target: {fileID: 7194512740443469361, guid: 284c18ecc4f72ec20968371b116bf40b, type: 3}
+      propertyPath: rightControllerPosition
+      value: 
+      objectReference: {fileID: -3326005586356538449, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+    - target: {fileID: 7194512740443469361, guid: 284c18ecc4f72ec20968371b116bf40b, type: 3}
+      propertyPath: rightControllerRotation
+      value: 
+      objectReference: {fileID: 5101698808175986029, guid: c348712bda248c246b8c49b3db54643f, type: 3}
     - target: {fileID: 8605111556703751387, guid: 284c18ecc4f72ec20968371b116bf40b, type: 3}
       propertyPath: m_Name
       value: palmmenu
