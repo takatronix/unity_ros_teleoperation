@@ -2270,7 +2270,7 @@ MonoBehaviour:
   portSetting: {fileID: 264917011689307047}
   numpad: {fileID: 1241032859914446482}
   defaultIP: localhost
-  defaultPort: 10000
+  defaultPort: 42000
 --- !u!114 &2395036363916264285
 MonoBehaviour:
   m_ObjectHideFlags: 0

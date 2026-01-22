@@ -21,7 +21,7 @@ public class ROSManager : MonoBehaviour
 
     private List<string> _ips;
     public string defaultIP = "192.168.1.49";
-    public string defaultPort = "10000";
+    public string defaultPort = "42000";
 
     public GameObject ipSetting;
     public GameObject portSetting;

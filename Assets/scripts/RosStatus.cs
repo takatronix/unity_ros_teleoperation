@@ -13,7 +13,7 @@ public class RosStatus : MonoBehaviour
     public Numpad numpad;
 
     public string defaultIP = "10.42.0.1";
-    public string defaultPort = "10000";
+    public string defaultPort = "42000";
 
     private RawImage _rawImage;
     private TMPro.TMP_InputField _ipText;

@@ -836,7 +836,7 @@ MonoBehaviour:
   portSetting: {fileID: 7409327026488381014}
   numpad: {fileID: 290896502712953041}
   defaultIP: 10.42.0.1
-  defaultPort: 10000
+  defaultPort: 42000
 --- !u!114 &7164437258588447984
 MonoBehaviour:
   m_ObjectHideFlags: 0

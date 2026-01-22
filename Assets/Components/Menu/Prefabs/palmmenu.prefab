@@ -10632,7 +10632,7 @@ MonoBehaviour:
         m_CallState: 2
   ipDropdown: {fileID: 4778923178812294728}
   defaultIP: 192.168.1.49
-  defaultPort: 10000
+  defaultPort: 42000
   ipSetting: {fileID: 4633833237985769288}
   portSetting: {fileID: 3546049802114300441}
   menu: {fileID: 6732427896125157528}
